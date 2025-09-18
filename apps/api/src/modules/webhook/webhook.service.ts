@@ -14,11 +14,10 @@ export class WebhookService {
   async createWebhook(createWebhookDto: CreateWebhookDto): Promise<WebhookResponseDto> {
     const webhook = await this.prisma.webhook.create({
       data: {
-        name: createWebhookDto.name,
         url: createWebhookDto.url,
         events: createWebhookDto.events || Object.values(WebhookEventType),
         isActive: createWebhookDto.isActive ?? true,
-        secret: createWebhookDto.secret,
+        secret: createWebhookDto.secret || '',
       },
       include: {
         deliveries: {
@@ -114,8 +113,8 @@ export class WebhookService {
     const delivery = await this.prisma.webhookDelivery.create({
       data: {
         webhookId,
-        url: webhook.url,
-        payload: JSON.stringify(event),
+        event: event.eventType,
+        payload: event as any,
         status: DeliveryStatus.PENDING,
         attempts: 0,
       },
@@ -138,25 +137,24 @@ export class WebhookService {
     const baseDelay = 1000;
 
     if (delivery.attempts >= maxAttempts) {
-      await this.prisma.webhookDelivery.update({
-        where: { id: deliveryId },
-        data: {
-          status: DeliveryStatus.FAILED,
-          lastAttemptAt: new Date(),
-        },
-      });
+        await this.prisma.webhookDelivery.update({
+          where: { id: deliveryId },
+          data: {
+            status: DeliveryStatus.FAILED,
+          },
+        });
       return;
     }
 
     try {
-      const response = await fetch(delivery.url, {
+      const response = await fetch(delivery.webhook.url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Webhook-Signature': this.generateSignature(delivery.payload, delivery.webhook.secret),
-          'X-Webhook-Event': JSON.parse(delivery.payload).eventType,
+          'X-Webhook-Signature': this.generateSignature(JSON.stringify(delivery.payload), delivery.webhook.secret),
+          'X-Webhook-Event': delivery.event,
         },
-        body: delivery.payload,
+        body: JSON.stringify(delivery.payload),
       });
 
       if (response.ok) {
@@ -164,10 +162,9 @@ export class WebhookService {
           where: { id: deliveryId },
           data: {
             status: DeliveryStatus.DELIVERED,
-            statusCode: response.status,
-            responseBody: await response.text(),
+            response: await response.json().catch(() => ({ status: response.status })),
             attempts: delivery.attempts + 1,
-            lastAttemptAt: new Date(),
+            deliveredAt: new Date(),
           },
         });
       } else {
@@ -180,10 +177,8 @@ export class WebhookService {
         where: { id: deliveryId },
         data: {
           status: DeliveryStatus.FAILED,
-          statusCode: error.status || 0,
-          responseBody: error.message,
+          response: { error: error.message, status: error.status || 0 },
           attempts: delivery.attempts + 1,
-          lastAttemptAt: new Date(),
           nextRetryAt,
         },
       });
@@ -259,7 +254,7 @@ export class WebhookService {
   private mapWebhookToResponse(webhook: any): WebhookResponseDto {
     return {
       id: webhook.id,
-      name: webhook.name,
+      name: webhook.url, // Usando URL como nome temporário
       url: webhook.url,
       events: webhook.events,
       isActive: webhook.isActive,
@@ -267,12 +262,12 @@ export class WebhookService {
       deliveries: webhook.deliveries.map((delivery: any) => ({
         id: delivery.id,
         webhookId: delivery.webhookId,
-        url: delivery.url,
+        url: webhook.url,
         status: delivery.status,
-        statusCode: delivery.statusCode,
-        responseBody: delivery.responseBody,
+        statusCode: delivery.response?.status,
+        responseBody: delivery.response ? JSON.stringify(delivery.response) : undefined,
         attempts: delivery.attempts,
-        lastAttemptAt: delivery.lastAttemptAt,
+        lastAttemptAt: delivery.deliveredAt,
         nextRetryAt: delivery.nextRetryAt,
         createdAt: delivery.createdAt,
         updatedAt: delivery.updatedAt,
