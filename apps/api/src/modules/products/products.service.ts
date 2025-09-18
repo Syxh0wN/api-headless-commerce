@@ -11,9 +11,10 @@ export class ProductsService {
   async create(createProductDto: CreateProductDto) {
     const product = await this.prisma.product.create({
       data: {
-        ...createProductDto,
-        isActive: createProductDto.isActive ?? true,
-        tags: createProductDto.tags ?? [],
+        title: createProductDto.title,
+        slug: createProductDto.slug,
+        description: createProductDto.description,
+        status: createProductDto.isActive ? 'ACTIVE' : 'DRAFT',
       },
     });
 
@@ -31,13 +32,13 @@ export class ProductsService {
     } = query;
     const skip = (page - 1) * limit;
 
-    const where: any = {
-      isActive: true,
-    };
+        const where: any = {
+          status: 'ACTIVE',
+        };
 
     if (search) {
       where.OR = [
-        { name: { contains: search, mode: 'insensitive' } },
+        { title: { contains: search, mode: 'insensitive' } },
         { description: { contains: search, mode: 'insensitive' } },
       ];
     }
@@ -83,12 +84,7 @@ export class ProductsService {
     const product = await this.prisma.product.findUnique({
       where: { slug },
       include: {
-        category: true,
-        variants: {
-          include: {
-            inventory: true,
-          },
-        },
+        variants: true,
       },
     });
 
@@ -105,8 +101,10 @@ export class ProductsService {
     const updatedProduct = await this.prisma.product.update({
       where: { id },
       data: {
-        ...updateProductDto,
-        tags: updateProductDto.tags ?? product.tags,
+        title: updateProductDto.title,
+        slug: updateProductDto.slug,
+        description: updateProductDto.description,
+        status: updateProductDto.isActive ? 'ACTIVE' : 'DRAFT',
       },
     });
 

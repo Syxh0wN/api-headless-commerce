@@ -8,6 +8,8 @@ import { CreateProductDto } from '../products/dto/create-product.dto';
 import { UpdateProductDto } from '../products/dto/update-product.dto';
 import { CreateCouponDto } from './dto/create-coupon.dto';
 import { UpdateCouponDto } from './dto/update-coupon.dto';
+import { ApiKeyService } from '../../common/auth/api-key.service';
+import { AuditService } from '../../common/audit/audit.service';
 
 @Injectable()
 export class AdminService {
@@ -119,6 +121,10 @@ export class AdminService {
     });
 
     return { message: 'Produto deletado com sucesso' };
+  }
+
+  async removeProduct(id: string) {
+    await this.prisma.product.delete({ where: { id } });
   }
 
   async getProductVariants(productId: string) {

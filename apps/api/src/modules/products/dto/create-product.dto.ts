@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CreateProductDto {
   @ApiProperty({ example: 'Produto Exemplo' })
   @IsString()
-  name: string;
+  title: string;
 
   @ApiProperty({ example: 'produto-exemplo' })
   @IsString()
