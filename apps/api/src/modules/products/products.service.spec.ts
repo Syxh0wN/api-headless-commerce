@@ -68,9 +68,10 @@ describe('ProductsService', () => {
       expect(result).toEqual(mockProduct);
       expect(mockPrismaService.product.create).toHaveBeenCalledWith({
         data: {
-          ...createProductDto,
-          isActive: true,
-          tags: ['tag1', 'tag2'],
+          title: createProductDto.title,
+          slug: createProductDto.slug,
+          description: createProductDto.description,
+          status: 'DRAFT',
         },
       });
     });
@@ -85,9 +86,10 @@ describe('ProductsService', () => {
 
       expect(mockPrismaService.product.create).toHaveBeenCalledWith({
         data: {
-          ...dtoWithoutTags,
-          isActive: true,
-          tags: [],
+          title: dtoWithoutTags.title,
+          slug: dtoWithoutTags.slug,
+          description: dtoWithoutTags.description,
+          status: 'DRAFT',
         },
       });
     });
@@ -128,9 +130,9 @@ describe('ProductsService', () => {
 
       expect(mockPrismaService.product.findMany).toHaveBeenCalledWith({
         where: {
-          isActive: true,
+          status: 'ACTIVE',
           OR: [
-            { name: { contains: 'teste', mode: 'insensitive' } },
+            { title: { contains: 'teste', mode: 'insensitive' } },
             { description: { contains: 'teste', mode: 'insensitive' } },
           ],
           categoryId: 'cat-1',
@@ -163,8 +165,10 @@ describe('ProductsService', () => {
 
   describe('update', () => {
     const updateProductDto = {
-      name: 'Produto Atualizado',
-      price: 19999,
+      title: 'Produto Atualizado',
+      slug: 'produto-atualizado',
+      description: 'Descrição atualizada',
+      isActive: true,
     };
 
     it('deve atualizar produto com sucesso', async () => {
@@ -183,8 +187,10 @@ describe('ProductsService', () => {
       expect(mockPrismaService.product.update).toHaveBeenCalledWith({
         where: { id: '1' },
         data: {
-          ...updateProductDto,
-          tags: ['tag1', 'tag2'],
+          title: updateProductDto.title,
+          slug: updateProductDto.slug,
+          description: updateProductDto.description,
+          status: updateProductDto.isActive ? 'ACTIVE' : 'DRAFT',
         },
       });
     });
