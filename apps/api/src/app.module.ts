@@ -5,6 +5,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { BullModule } from '@nestjs/bullmq';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { AppService } from './app.service';
         port: parseInt(process.env.REDIS_PORT || '6379'),
       },
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
