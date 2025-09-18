@@ -119,15 +119,18 @@ model Inventory {
 }
 
 model Cart {
-  id          String   @id @default(cuid())
-  userId      String?  @unique
-  sessionId   String?  @unique
-  expiresAt   DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String   @id @default(cuid())
+  userId         String?  @unique
+  sessionId      String?  @unique
+  expiresAt      DateTime?
+  couponId       String?
+  discountAmount Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-  user        User?    @relation(fields: [userId], references: [id])
-  items       CartItem[]
+  user           User?    @relation(fields: [userId], references: [id])
+  coupon         Coupon?  @relation(fields: [couponId], references: [id])
+  items          CartItem[]
 
   @@map("carts")
 }
@@ -229,20 +232,23 @@ model Payment {
 }
 
 model Coupon {
-  id          String   @id @default(cuid())
-  code        String   @unique
-  name        String
-  description String?
-  type        CouponType
-  value       Int      // valor do desconto
-  minAmount   Int?     // valor mínimo do pedido em centavos
-  maxUses     Int?
-  usedCount   Int      @default(0)
-  isActive    Boolean  @default(true)
-  startsAt    DateTime?
-  expiresAt   DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String   @id @default(cuid())
+  code           String   @unique
+  name           String
+  description    String?
+  type           CouponType
+  value          Int      // valor do desconto
+  minimumAmount  Int?     // valor mínimo do pedido em centavos
+  maximumDiscount Int?    // desconto máximo em centavos
+  usageLimit     Int?     // limite de uso
+  usedCount      Int      @default(0)
+  isActive       Boolean  @default(true)
+  validFrom      DateTime?
+  validUntil     DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  carts          Cart[]
 
   @@map("coupons")
 }
@@ -282,6 +288,7 @@ model WebhookDelivery {
 
 enum UserRole {
   ADMIN
+  STAFF
   CUSTOMER
 }
 

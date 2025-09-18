@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { AddToCartDto } from './dto/add-to-cart.dto';
 import { UpdateCartItemDto } from './dto/update-cart-item.dto';
@@ -8,7 +12,10 @@ import { CartResponseDto } from './dto/cart-response.dto';
 export class CartService {
   constructor(private prisma: PrismaService) {}
 
-  async addToCart(userId: string, addToCartDto: AddToCartDto): Promise<CartResponseDto> {
+  async addToCart(
+    userId: string,
+    addToCartDto: AddToCartDto,
+  ): Promise<CartResponseDto> {
     const { productId, quantity } = addToCartDto;
 
     const product = await this.prisma.product.findUnique({
@@ -117,7 +124,7 @@ export class CartService {
         userId,
         items: [],
         totalItems: 0,
-        totalPrice: 0,
+        total: 0,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -139,7 +146,7 @@ export class CartService {
         product: item.product,
       })),
       totalItems,
-      totalPrice,
+      total: totalPrice,
       createdAt: cart.createdAt,
       updatedAt: cart.updatedAt,
     };
@@ -177,7 +184,10 @@ export class CartService {
     return this.getCart(userId);
   }
 
-  async removeFromCart(userId: string, itemId: string): Promise<CartResponseDto> {
+  async removeFromCart(
+    userId: string,
+    itemId: string,
+  ): Promise<CartResponseDto> {
     const cart = await this.prisma.cart.findUnique({
       where: { userId },
     });

@@ -9,7 +9,12 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { CartService } from './cart.service';
 import { AddToCartDto } from './dto/add-to-cart.dto';
 import { UpdateCartItemDto } from './dto/update-cart-item.dto';
@@ -45,7 +50,11 @@ export class CartController {
     @Param('itemId') itemId: string,
     @Body() updateCartItemDto: UpdateCartItemDto,
   ): Promise<CartResponseDto> {
-    return this.cartService.updateCartItem(req.user.id, itemId, updateCartItemDto);
+    return this.cartService.updateCartItem(
+      req.user.id,
+      itemId,
+      updateCartItemDto,
+    );
   }
 
   @Delete('items/:itemId')

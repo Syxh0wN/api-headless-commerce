@@ -7,14 +7,21 @@ import {
   Param,
   Query,
   UseGuards,
+  UseInterceptors,
   Request,
 } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { CheckoutService } from './checkout.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { OrderResponseDto } from './dto/order-response.dto';
 import { AuthGuard } from '../../common/guards/auth.guard';
+import { IdempotencyInterceptor } from '../../common/interceptors/idempotency.interceptor';
 
 @ApiTags('checkout')
 @ApiBearerAuth()
@@ -24,22 +31,32 @@ export class CheckoutController {
   constructor(private readonly checkoutService: CheckoutService) {}
 
   @Post('orders')
+  @UseInterceptors(IdempotencyInterceptor)
   @ApiOperation({ summary: 'Criar novo pedido' })
   @ApiResponse({ status: 201, description: 'Pedido criado com sucesso' })
-  async createOrder(@Request() req: any, @Body() createOrderDto: CreateOrderDto): Promise<OrderResponseDto> {
+  async createOrder(
+    @Request() req: any,
+    @Body() createOrderDto: CreateOrderDto,
+  ): Promise<OrderResponseDto> {
     return this.checkoutService.createOrder(req.user.id, createOrderDto);
   }
 
   @Get('orders/:id')
   @ApiOperation({ summary: 'Obter pedido por ID' })
   @ApiResponse({ status: 200, description: 'Pedido obtido com sucesso' })
-  async getOrder(@Request() req: any, @Param('id') id: string): Promise<OrderResponseDto> {
+  async getOrder(
+    @Request() req: any,
+    @Param('id') id: string,
+  ): Promise<OrderResponseDto> {
     return this.checkoutService.getOrder(req.user.id, id);
   }
 
   @Get('orders')
   @ApiOperation({ summary: 'Listar pedidos do usuário' })
-  @ApiResponse({ status: 200, description: 'Lista de pedidos obtida com sucesso' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de pedidos obtida com sucesso',
+  })
   async getUserOrders(
     @Request() req: any,
     @Query('page') page?: number,

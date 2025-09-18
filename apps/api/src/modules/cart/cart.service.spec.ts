@@ -196,7 +196,11 @@ describe('CartService', () => {
       });
       mockPrismaService.cartItem.update.mockResolvedValue({});
 
-      const result = await service.updateCartItem('user-1', 'item-1', updateDto);
+      const result = await service.updateCartItem(
+        'user-1',
+        'item-1',
+        updateDto,
+      );
 
       expect(result).toBeDefined();
       expect(mockPrismaService.cartItem.update).toHaveBeenCalledWith({
@@ -243,18 +247,18 @@ describe('CartService', () => {
     it('deve lançar NotFoundException quando carrinho não encontrado', async () => {
       mockPrismaService.cart.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.removeFromCart('user-1', 'item-1'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.removeFromCart('user-1', 'item-1')).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('deve lançar NotFoundException quando item não encontrado', async () => {
       mockPrismaService.cart.findUnique.mockResolvedValue(mockCart);
       mockPrismaService.cartItem.findFirst.mockResolvedValue(null);
 
-      await expect(
-        service.removeFromCart('user-1', 'item-1'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.removeFromCart('user-1', 'item-1')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
