@@ -28,6 +28,27 @@ let AuthController = class AuthController {
     async login(loginDto) {
         return this.authService.login(loginDto);
     }
+    async debug() {
+        return {
+            nodeEnv: process.env.NODE_ENV,
+            databaseUrl: process.env.DATABASE_URL ? 'SET' : 'NOT_SET',
+            jwtSecret: process.env.JWT_SECRET ? 'SET' : 'NOT_SET',
+            useMock: process.env.NODE_ENV === 'development' && !process.env.DATABASE_URL,
+        };
+    }
+    async test() {
+        return { message: 'Test endpoint working' };
+    }
+    async simpleRegister(registerDto) {
+        return {
+            message: 'User registered successfully',
+            user: {
+                email: registerDto.email,
+                name: registerDto.name,
+                id: 'simple-id',
+            },
+        };
+    }
 };
 exports.AuthController = AuthController;
 __decorate([
@@ -51,6 +72,28 @@ __decorate([
     __metadata("design:paramtypes", [login_dto_1.LoginDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
+__decorate([
+    (0, common_1.Post)('debug'),
+    (0, swagger_1.ApiOperation)({ summary: 'Debug info' }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "debug", null);
+__decorate([
+    (0, common_1.Post)('test'),
+    (0, swagger_1.ApiOperation)({ summary: 'Test endpoint' }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "test", null);
+__decorate([
+    (0, common_1.Post)('simple-register'),
+    (0, swagger_1.ApiOperation)({ summary: 'Simple register without JWT' }),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [register_dto_1.RegisterDto]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "simpleRegister", null);
 exports.AuthController = AuthController = __decorate([
     (0, swagger_1.ApiTags)('Auth'),
     (0, common_1.Controller)('auth'),

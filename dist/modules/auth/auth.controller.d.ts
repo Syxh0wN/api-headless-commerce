@@ -7,10 +7,12 @@ export declare class AuthController {
     register(registerDto: RegisterDto): Promise<{
         user: {
             email: string;
-            name: string;
+            name: string | null;
+            password: string;
             id: string;
             role: import(".prisma/client").$Enums.UserRole;
             createdAt: Date;
+            updatedAt: Date;
         };
         token: string;
     }>;
@@ -23,5 +25,22 @@ export declare class AuthController {
             createdAt: Date;
         };
         token: string;
+    }>;
+    debug(): Promise<{
+        nodeEnv: string;
+        databaseUrl: string;
+        jwtSecret: string;
+        useMock: boolean;
+    }>;
+    test(): Promise<{
+        message: string;
+    }>;
+    simpleRegister(registerDto: RegisterDto): Promise<{
+        message: string;
+        user: {
+            email: string;
+            name: string;
+            id: string;
+        };
     }>;
 }

@@ -5,14 +5,17 @@ import { LoginDto } from './dto/login.dto';
 export declare class AuthService {
     private prisma;
     private jwtService;
+    private useMock;
     constructor(prisma: PrismaService, jwtService: JwtService);
     register(registerDto: RegisterDto): Promise<{
         user: {
             email: string;
-            name: string;
+            name: string | null;
+            password: string;
             id: string;
             role: import(".prisma/client").$Enums.UserRole;
             createdAt: Date;
+            updatedAt: Date;
         };
         token: string;
     }>;

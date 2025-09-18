@@ -4,54 +4,47 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from '../../infra/prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
-export class AuthService {
-  private useMock = false;
+export class AuthServiceMock {
+  private users: any[] = [];
 
-  constructor(
-    private prisma: PrismaService,
-    private jwtService: JwtService,
-  ) {}
+  constructor(private jwtService: JwtService) {}
 
   async register(registerDto: RegisterDto) {
     const { email, name, password } = registerDto;
 
-    const existingUser = await this.prisma.user.findUnique({
-      where: { email },
-    });
-
+    const existingUser = this.users.find(user => user.email === email);
     if (existingUser) {
       throw new ConflictException('Email já está em uso');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    
-    const user = await this.prisma.user.create({
-      data: {
-        email,
-        name,
-        password: hashedPassword,
-        role: 'CUSTOMER',
-      },
-    });
+    const user = {
+      id: `user-${Date.now()}`,
+      email,
+      name,
+      role: 'CUSTOMER',
+      createdAt: new Date(),
+    };
+
+    this.users.push({ ...user, password: hashedPassword });
 
     const token = this.generateToken(user.id, user.email, user.role);
 
-    return { user, token };
+    return {
+      user,
+      token,
+    };
   }
 
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
 
-    const user = await this.prisma.user.findUnique({
-      where: { email },
-    });
-
+    const user = this.users.find(u => u.email === email);
     if (!user) {
       throw new UnauthorizedException('Credenciais inválidas');
     }

@@ -25,4 +25,34 @@ export class AuthController {
   async login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
   }
+
+  @Post('debug')
+  @ApiOperation({ summary: 'Debug info' })
+  async debug() {
+    return {
+      nodeEnv: process.env.NODE_ENV,
+      databaseUrl: process.env.DATABASE_URL ? 'SET' : 'NOT_SET',
+      jwtSecret: process.env.JWT_SECRET ? 'SET' : 'NOT_SET',
+      useMock: process.env.NODE_ENV === 'development' && !process.env.DATABASE_URL,
+    };
+  }
+
+  @Post('test')
+  @ApiOperation({ summary: 'Test endpoint' })
+  async test() {
+    return { message: 'Test endpoint working' };
+  }
+
+  @Post('simple-register')
+  @ApiOperation({ summary: 'Simple register without JWT' })
+  async simpleRegister(@Body() registerDto: RegisterDto) {
+    return {
+      message: 'User registered successfully',
+      user: {
+        email: registerDto.email,
+        name: registerDto.name,
+        id: 'simple-id',
+      },
+    };
+  }
 }

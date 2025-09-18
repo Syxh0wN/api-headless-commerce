@@ -42,42 +42,39 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AuthService = void 0;
+exports.AuthServiceMock = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
-const prisma_service_1 = require("../../infra/prisma/prisma.service");
 const bcrypt = __importStar(require("bcryptjs"));
-let AuthService = class AuthService {
-    constructor(prisma, jwtService) {
-        this.prisma = prisma;
+let AuthServiceMock = class AuthServiceMock {
+    constructor(jwtService) {
         this.jwtService = jwtService;
-        this.useMock = false;
+        this.users = [];
     }
     async register(registerDto) {
         const { email, name, password } = registerDto;
-        const existingUser = await this.prisma.user.findUnique({
-            where: { email },
-        });
+        const existingUser = this.users.find(user => user.email === email);
         if (existingUser) {
             throw new common_1.ConflictException('Email já está em uso');
         }
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await this.prisma.user.create({
-            data: {
-                email,
-                name,
-                password: hashedPassword,
-                role: 'CUSTOMER',
-            },
-        });
+        const user = {
+            id: `user-${Date.now()}`,
+            email,
+            name,
+            role: 'CUSTOMER',
+            createdAt: new Date(),
+        };
+        this.users.push({ ...user, password: hashedPassword });
         const token = this.generateToken(user.id, user.email, user.role);
-        return { user, token };
+        return {
+            user,
+            token,
+        };
     }
     async login(loginDto) {
         const { email, password } = loginDto;
-        const user = await this.prisma.user.findUnique({
-            where: { email },
-        });
+        const user = this.users.find(u => u.email === email);
         if (!user) {
             throw new common_1.UnauthorizedException('Credenciais inválidas');
         }
@@ -102,10 +99,9 @@ let AuthService = class AuthService {
         return this.jwtService.sign(payload);
     }
 };
-exports.AuthService = AuthService;
-exports.AuthService = AuthService = __decorate([
+exports.AuthServiceMock = AuthServiceMock;
+exports.AuthServiceMock = AuthServiceMock = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
-        jwt_1.JwtService])
-], AuthService);
-//# sourceMappingURL=auth.service.js.map
+    __metadata("design:paramtypes", [jwt_1.JwtService])
+], AuthServiceMock);
+//# sourceMappingURL=auth.service.mock.js.map

@@ -82,7 +82,7 @@ describe('AuthService', () => {
 
     it('deve lançar ConflictException quando email já existe', async () => {
       mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
-
+      
       await expect(service.register(registerDto)).rejects.toThrow(
         ConflictException,
       );
@@ -92,6 +92,12 @@ describe('AuthService', () => {
   describe('login', () => {
     const loginDto = {
       email: 'test@email.com',
+      password: 'password123',
+    };
+
+    const registerDto = {
+      email: 'test@email.com',
+      name: 'Test User',
       password: 'password123',
     };
 
@@ -110,7 +116,7 @@ describe('AuthService', () => {
 
     it('deve lançar UnauthorizedException quando usuário não existe', async () => {
       mockPrismaService.user.findUnique.mockResolvedValue(null);
-
+      
       await expect(service.login(loginDto)).rejects.toThrow(
         UnauthorizedException,
       );
