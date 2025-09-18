@@ -11,7 +11,11 @@ import { UpdateCouponDto } from './dto/update-coupon.dto';
 
 @Injectable()
 export class AdminService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private apiKeyService: ApiKeyService,
+    private auditService: AuditService,
+  ) {}
 
   async getAllProducts(query: any) {
     const { page = 1, limit = 20, search, category, status } = query;
@@ -361,5 +365,153 @@ export class AdminService {
     });
 
     return updatedOrder;
+  }
+
+  // ===== NOVOS MÉTODOS PARA V1 =====
+
+  async createVariant(productId: string, createVariantDto: any) {
+    const variant = await this.prisma.productVariant.create({
+      data: {
+        productId,
+        sku: createVariantDto.sku,
+        attributes: createVariantDto.attributes || {},
+        priceCents: createVariantDto.priceCents,
+        inventoryQty: createVariantDto.inventoryQty || 0,
+        isActive: createVariantDto.isActive !== false,
+      },
+    });
+
+    return variant;
+  }
+
+  async updateStock(variantId: string, quantity: number) {
+    const variant = await this.prisma.productVariant.update({
+      where: { id: variantId },
+      data: { inventoryQty: quantity },
+    });
+
+    return variant;
+  }
+
+  async createPromoCode(createCouponDto: CreateCouponDto) {
+    const promoCode = await this.prisma.promoCode.create({
+      data: {
+        code: createCouponDto.code,
+        type: createCouponDto.type,
+        value: createCouponDto.value,
+        startsAt: createCouponDto.validFrom,
+        endsAt: createCouponDto.validUntil,
+        maxRedemptions: createCouponDto.usageLimit,
+        isActive: createCouponDto.isActive !== false,
+      },
+    });
+
+    return promoCode;
+  }
+
+  async updatePromoCode(id: string, updateCouponDto: UpdateCouponDto) {
+    const promoCode = await this.prisma.promoCode.update({
+      where: { id },
+      data: {
+        code: updateCouponDto.code,
+        type: updateCouponDto.type,
+        value: updateCouponDto.value,
+        startsAt: updateCouponDto.validFrom,
+        endsAt: updateCouponDto.validUntil,
+        maxRedemptions: updateCouponDto.usageLimit,
+        isActive: updateCouponDto.isActive,
+      },
+    });
+
+    return promoCode;
+  }
+
+  async removePromoCode(id: string) {
+    await this.prisma.promoCode.delete({ where: { id } });
+  }
+
+  async listOrders() {
+    return this.prisma.order.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+          },
+        },
+        items: {
+          include: {
+            variant: {
+              include: {
+                product: {
+                  select: {
+                    id: true,
+                    title: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        shipping: true,
+        payment: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async updateOrderStatus(id: string, status: string) {
+    const order = await this.prisma.order.update({
+      where: { id },
+      data: { status: status as any },
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+          },
+        },
+        items: {
+          include: {
+            variant: {
+              include: {
+                product: {
+                  select: {
+                    id: true,
+                    title: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        shipping: true,
+        payment: true,
+      },
+    });
+
+    return order;
+  }
+
+  async generateApiKey(role: string, expiresAt?: string) {
+    const expiresAtDate = expiresAt ? new Date(expiresAt) : undefined;
+    const { key, hash } = await this.apiKeyService.generateApiKey(role, expiresAtDate);
+    
+    return {
+      key,
+      role,
+      expiresAt: expiresAtDate,
+      createdAt: new Date(),
+    };
+  }
+
+  async listApiKeys() {
+    return this.apiKeyService.listApiKeys();
+  }
+
+  async getAuditLogs(entity?: string, entityId?: string) {
+    return this.auditService.getAuditLogs(entity, entityId);
   }
 }

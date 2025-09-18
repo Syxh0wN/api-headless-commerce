@@ -4,22 +4,47 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Request } from 'express';
+import { ApiKeyService } from '../auth/api-key.service';
 
 @Injectable()
 export class ApiKeyGuard implements CanActivate {
-  canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest<Request>();
-    const apiKey = request.headers['x-api-key'];
+  constructor(private apiKeyService: ApiKeyService) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest();
+    const apiKey = this.extractApiKeyFromHeader(request);
 
     if (!apiKey) {
-      throw new UnauthorizedException('API Key nao fornecida');
+      throw new UnauthorizedException('API Key não fornecida');
     }
 
-    if (apiKey !== process.env.API_KEY_SECRET) {
-      throw new UnauthorizedException('API Key invalida');
+    const validation = await this.apiKeyService.validateApiKey(apiKey);
+
+    if (!validation.isValid) {
+      throw new UnauthorizedException('API Key inválida ou expirada');
     }
+
+    // Adicionar informações do usuário ao request
+    request.user = {
+      id: 'api-key-user',
+      role: validation.role,
+      type: 'api-key',
+    };
 
     return true;
+  }
+
+  private extractApiKeyFromHeader(request: any): string | undefined {
+    const authHeader = request.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      return authHeader.substring(7);
+    }
+
+    const apiKeyHeader = request.headers['x-api-key'];
+    if (apiKeyHeader) {
+      return apiKeyHeader;
+    }
+
+    return undefined;
   }
 }
