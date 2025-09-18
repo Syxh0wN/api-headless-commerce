@@ -7,8 +7,10 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
 
   async onModuleInit() {
     this.client = createClient({
-      host: process.env.REDIS_HOST || 'localhost',
-      port: parseInt(process.env.REDIS_PORT || '6379'),
+      socket: {
+        host: process.env.REDIS_HOST || 'localhost',
+        port: parseInt(process.env.REDIS_PORT || '6379'),
+      },
       password: process.env.REDIS_PASSWORD,
     });
 
@@ -36,7 +38,8 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   }
 
   async get(key: string): Promise<string | null> {
-    return await this.client.get(key);
+    const result = await this.client.get(key);
+    return result as string | null;
   }
 
   async del(key: string): Promise<void> {

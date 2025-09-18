@@ -10,11 +10,12 @@ exports.RedisService = void 0;
 const common_1 = require("@nestjs/common");
 const redis_1 = require("redis");
 let RedisService = class RedisService {
-    client;
     async onModuleInit() {
         this.client = (0, redis_1.createClient)({
-            host: process.env.REDIS_HOST || 'localhost',
-            port: parseInt(process.env.REDIS_PORT || '6379'),
+            socket: {
+                host: process.env.REDIS_HOST || 'localhost',
+                port: parseInt(process.env.REDIS_PORT || '6379'),
+            },
             password: process.env.REDIS_PASSWORD,
         });
         this.client.on('error', (err) => {
@@ -37,7 +38,8 @@ let RedisService = class RedisService {
         }
     }
     async get(key) {
-        return await this.client.get(key);
+        const result = await this.client.get(key);
+        return result;
     }
     async del(key) {
         await this.client.del(key);

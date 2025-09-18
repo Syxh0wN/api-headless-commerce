@@ -28,8 +28,8 @@ export declare const validateConfig: (config: Record<string, unknown>) => {
     JWT_EXPIRES_IN: string;
     API_KEY_SECRET: string;
     WEBHOOK_SECRET: string;
-    REDIS_PASSWORD?: string | undefined;
-    MEILISEARCH_HOST?: string | undefined;
-    MEILISEARCH_API_KEY?: string | undefined;
+    REDIS_PASSWORD?: string;
+    MEILISEARCH_HOST?: string;
+    MEILISEARCH_API_KEY?: string;
 };
 export {};

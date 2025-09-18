@@ -2,8 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Money = void 0;
 class Money {
-    amount;
-    currency;
     constructor(amount, currency = 'BRL') {
         this.amount = amount;
         this.currency = currency;

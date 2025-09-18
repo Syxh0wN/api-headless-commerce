@@ -13,7 +13,6 @@ exports.AuthGuard = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 let AuthGuard = class AuthGuard {
-    jwtService;
     constructor(jwtService) {
         this.jwtService = jwtService;
     }
@@ -27,7 +26,7 @@ let AuthGuard = class AuthGuard {
             const payload = await this.jwtService.verifyAsync(token, {
                 secret: process.env.JWT_SECRET,
             });
-            request['user'] = payload;
+            request.user = payload;
         }
         catch {
             throw new common_1.UnauthorizedException('Token invalido');
