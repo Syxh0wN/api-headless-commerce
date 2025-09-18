@@ -31,7 +31,7 @@ export class CartController {
   @ApiResponse({ status: 201, description: 'Carrinho criado com sucesso' })
   async createCart(@Res() res: Response) {
     const cart = await this.guestCartService.createCart();
-    
+
     res.cookie('cart_session', cart.sessionId, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -67,7 +67,12 @@ export class CartController {
     @Req() req: Request,
   ) {
     const sessionId = req.cookies?.cart_session;
-    return this.guestCartService.updateItem(cartId, sessionId, itemId, updateCartItemDto);
+    return this.guestCartService.updateItem(
+      cartId,
+      sessionId,
+      itemId,
+      updateCartItemDto,
+    );
   }
 
   @Delete(':id/items/:itemId')
@@ -97,10 +102,7 @@ export class CartController {
   @Get(':id')
   @ApiOperation({ summary: 'Obter carrinho com totais recalculados' })
   @ApiResponse({ status: 200, description: 'Carrinho obtido com sucesso' })
-  async getCart(
-    @Param('id') cartId: string,
-    @Req() req: Request,
-  ) {
+  async getCart(@Param('id') cartId: string, @Req() req: Request) {
     const sessionId = req.cookies?.cart_session;
     return this.guestCartService.getCart(cartId, sessionId);
   }

@@ -47,10 +47,8 @@ export class AdminService {
         skip,
         take: limit,
         include: {
-          category: true,
           variants: {
             include: {
-              inventory: true,
             },
           },
         },
@@ -74,7 +72,6 @@ export class AdminService {
     const product = await this.prisma.product.create({
       data: createProductDto,
       include: {
-        category: true,
         variants: true,
       },
     });
@@ -95,10 +92,8 @@ export class AdminService {
       where: { id },
       data: updateProductDto,
       include: {
-        category: true,
         variants: {
           include: {
-            inventory: true,
           },
         },
       },
@@ -139,7 +134,6 @@ export class AdminService {
     const variants = await this.prisma.productVariant.findMany({
       where: { productId },
       include: {
-        inventory: true,
       },
       orderBy: { createdAt: 'desc' },
     });
@@ -162,7 +156,6 @@ export class AdminService {
         productId,
       },
       include: {
-        inventory: true,
       },
     });
 
@@ -178,20 +171,10 @@ export class AdminService {
       throw new NotFoundException('Variante não encontrada');
     }
 
-    const inventory = await this.prisma.inventory.upsert({
-      where: { variantId },
-      update: {
-        quantity: inventoryData.quantity,
-        reserved: inventoryData.reserved || 0,
-        available: inventoryData.quantity - (inventoryData.reserved || 0),
-        lowStockThreshold: inventoryData.lowStockThreshold || 5,
-      },
-      create: {
-        variantId,
-        quantity: inventoryData.quantity,
-        reserved: inventoryData.reserved || 0,
-        available: inventoryData.quantity - (inventoryData.reserved || 0),
-        lowStockThreshold: inventoryData.lowStockThreshold || 5,
+    const inventory = await this.prisma.productVariant.update({
+      where: { id: variantId },
+      data: {
+        inventoryQty: inventoryData.quantity,
       },
     });
 
@@ -299,17 +282,9 @@ export class AdminService {
           },
           items: {
             include: {
-              product: {
-                select: {
-                  id: true,
-                  name: true,
-                  sku: true,
-                },
-              },
               variant: {
                 select: {
                   id: true,
-                  name: true,
                   sku: true,
                 },
               },
@@ -333,45 +308,6 @@ export class AdminService {
     };
   }
 
-  async updateOrderStatus(id: string, statusData: any) {
-    const order = await this.prisma.order.findUnique({
-      where: { id },
-    });
-
-    if (!order) {
-      throw new NotFoundException('Pedido não encontrado');
-    }
-
-    const updatedOrder = await this.prisma.order.update({
-      where: { id },
-      data: {
-        status: statusData.status,
-        notes: statusData.notes,
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
-        items: {
-          include: {
-            product: {
-              select: {
-                id: true,
-                name: true,
-                sku: true,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    return updatedOrder;
-  }
 
   // ===== NOVOS MÉTODOS PARA V1 =====
 
