@@ -16,7 +16,9 @@ describe('AppController', () => {
 
   describe('root', () => {
     it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Headless Commerce API - Funcionando!');
+      expect(appController.getHello()).toBe(
+        'Headless Commerce API - Funcionando!',
+      );
     });
   });
 });

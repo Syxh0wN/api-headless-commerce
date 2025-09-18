@@ -58,5 +58,36 @@ Padrao humanizado!
 Sem comentarios nos codigos!
 Sempre comita, e suba!
 Quando for codigos longos, quebre-os, comita e suba!
+NAO UTILIZE EMOJOS
+
+Fluxo Padrão em Empresas
+Branch main (ou master):
+Branch principal de desenvolvimento
+Código estável e testado
+Código que está pronto para produção
+Branch protegida (não aceita push direto)
+Branch production (ou prod):
+Branch de produção/deploy
+Código que está rodando em produção
+Geralmente é uma cópia da main quando está estável
+Fluxo típico:
+Desenvolvimento: Criar feature branches a partir da main
+Pull Request: Merge da feature branch para main
+Testes: CI/CD roda testes na main
+Deploy: Quando main está estável → merge para production
+Produção: production é deployada automaticamente
+Exemplo real:
+Desenvolvedor cria feature/auth-system a partir da main
+Faz Pull Request para main
+Após aprovação e testes → merge para main
+Quando main está estável → merge para production
+production é deployada para os servidores
+Resumo:
+main = código estável pronto para produção
+production = código que está rodando em produção
+Desenvolvimento acontece em feature branches que mergem para main
+
+NAO E PARA TER COMENTARIOS EM NENHUM ARQUIVO, NENHUM
+
 alwaysApply: true
 ---
