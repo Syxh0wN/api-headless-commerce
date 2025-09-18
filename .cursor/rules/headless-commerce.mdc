@@ -1,0 +1,62 @@
+---
+description:
+
+API de Catálogo + Carrinho (Headless Commerce) em Node + TypeScript (NestJS).
+Exponho produtos, variantes, categorias e um carrinho com snapshot de preço, cupons e checkout idempotente (proteção por Idempotency-Key). Projeto focado em boas práticas de produção: PostgreSQL + Prisma, Redis (cache/locks), JWT/RBAC, rate limit, CORS/Helmet, Swagger, testes (Jest/Supertest) e observabilidade com OpenTelemetry. Ideal como base profissional para e-commerce headless.
+
+Infra: Docker (multi-stage), GitHub Actions (lint/test/build/scan)
+Mensageria/filas: BullMQ (e-mails, webhooks, reprocessos).
+
+adicionar item ao carrinho
+checkout (transação atômica)
+promo codes (correto e auditável)
+preços e moedas
+
+
+Testes de todas rotas:
+
+Unitários: services/regras de promo, money, auth (Jest).
+
+Integração: Prisma em DB efêmero (Testcontainers), supertest para módulos.
+
+E2E: fluxos “add to cart → checkout”.
+
+Carga: k6 para cenários de pico (ler catálogo, adicionar, checkout).
+
+Contract: valida OpenAPI (Dredd/prism) contra implementações.
+
+
+deploy & devops
+
+Dockerfile multi-stage (builder → runner), usuário não-root.
+
+Health checks: /health (liveness), /ready (readiness — checa DB/Redis).
+
+Migrations no startup (ou job dedicado).
+
+Blue/green ou rolling; variáveis por ambiente; feature flags.
+
+Backups e retenção do Postgres; pg_partman/particionamento para eventos volumosos.
+
+github:
+
+echo "# api-headless-commerce" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin git@github.com:Syxh0wN/api-headless-commerce.git
+git push -u origin main
+
+git remote add origin git@github.com:Syxh0wN/api-headless-commerce.git
+git branch -M main
+git push -u origin main
+
+
+globs:
+Padrao humanizado!
+Sem comentarios nos codigos!
+Sempre comita, e suba!
+Quando for codigos longos, quebre-os, comita e suba!
+alwaysApply: true
+---
