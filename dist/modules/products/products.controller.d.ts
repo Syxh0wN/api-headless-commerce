@@ -55,4 +55,29 @@ export declare class ProductsController {
             totalPages: number;
         };
     }>;
+    findBySlug(slug: string): Promise<{
+        variants: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            productId: string;
+            sku: string;
+            attributes: import("@prisma/client/runtime/library").JsonValue;
+            priceCents: number;
+            currency: string;
+            inventoryQty: number;
+            version: number;
+            isActive: boolean;
+        }[];
+    } & {
+        id: string;
+        title: string;
+        slug: string;
+        description: string | null;
+        shortDescription: string | null;
+        status: import(".prisma/client").$Enums.ProductStatus;
+        brandId: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+    }>;
 }

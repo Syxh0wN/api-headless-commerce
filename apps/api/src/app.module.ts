@@ -6,7 +6,7 @@ import { BullModule } from '@nestjs/bullmq';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaService } from './infra/prisma/prisma.service';
-// import { RedisService } from './infra/redis/redis.service';
+import { RedisService } from './infra/redis/redis.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { ProductsModule } from './modules/products/products.module';
 import { CartModule } from './modules/cart/cart.module';
@@ -31,12 +31,12 @@ import { AdminModule } from './modules/admin/admin.module';
     CacheModule.register({
       isGlobal: true,
     }),
-    // BullModule.forRoot({
-    //   connection: {
-    //     host: process.env.REDIS_HOST || 'localhost',
-    //     port: parseInt(process.env.REDIS_PORT || '6379'),
-    //   },
-    // }),
+    BullModule.forRoot({
+      connection: {
+        host: process.env.REDIS_HOST || 'localhost',
+        port: parseInt(process.env.REDIS_PORT || '6379'),
+      },
+    }),
         AuthModule,
         ProductsModule,
         CartModule,
@@ -47,6 +47,6 @@ import { AdminModule } from './modules/admin/admin.module';
         // QueueModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [AppService, PrismaService, RedisService],
 })
 export class AppModule {}

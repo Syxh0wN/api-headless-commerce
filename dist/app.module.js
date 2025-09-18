@@ -11,9 +11,11 @@ const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const throttler_1 = require("@nestjs/throttler");
 const cache_manager_1 = require("@nestjs/cache-manager");
+const bullmq_1 = require("@nestjs/bullmq");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const prisma_service_1 = require("./infra/prisma/prisma.service");
+const redis_service_1 = require("./infra/redis/redis.service");
 const auth_module_1 = require("./modules/auth/auth.module");
 const products_module_1 = require("./modules/products/products.module");
 const cart_module_1 = require("./modules/cart/cart.module");
@@ -39,6 +41,12 @@ exports.AppModule = AppModule = __decorate([
             cache_manager_1.CacheModule.register({
                 isGlobal: true,
             }),
+            bullmq_1.BullModule.forRoot({
+                connection: {
+                    host: process.env.REDIS_HOST || 'localhost',
+                    port: parseInt(process.env.REDIS_PORT || '6379'),
+                },
+            }),
             auth_module_1.AuthModule,
             products_module_1.ProductsModule,
             cart_module_1.CartModule,
@@ -47,7 +55,7 @@ exports.AppModule = AppModule = __decorate([
             admin_module_1.AdminModule,
         ],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService, prisma_service_1.PrismaService],
+        providers: [app_service_1.AppService, prisma_service_1.PrismaService, redis_service_1.RedisService],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

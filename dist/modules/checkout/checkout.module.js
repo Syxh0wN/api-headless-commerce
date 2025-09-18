@@ -12,6 +12,7 @@ const checkout_controller_1 = require("./checkout.controller");
 const checkout_service_1 = require("./checkout.service");
 const atomic_checkout_service_1 = require("./atomic-checkout.service");
 const prisma_service_1 = require("../../infra/prisma/prisma.service");
+const redis_service_1 = require("../../infra/redis/redis.service");
 const auth_module_1 = require("../auth/auth.module");
 let CheckoutModule = class CheckoutModule {
 };
@@ -20,7 +21,7 @@ exports.CheckoutModule = CheckoutModule = __decorate([
     (0, common_1.Module)({
         imports: [auth_module_1.AuthModule],
         controllers: [checkout_controller_1.CheckoutController],
-        providers: [checkout_service_1.CheckoutService, atomic_checkout_service_1.AtomicCheckoutService, prisma_service_1.PrismaService],
+        providers: [checkout_service_1.CheckoutService, atomic_checkout_service_1.AtomicCheckoutService, prisma_service_1.PrismaService, redis_service_1.RedisService],
         exports: [checkout_service_1.CheckoutService, atomic_checkout_service_1.AtomicCheckoutService],
     })
 ], CheckoutModule);

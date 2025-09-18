@@ -1,0 +1,35 @@
+[33mcommit 5afa8dba4c5b780e4d8a1c35fed1b1069c3bcfe0[m
+Author: Syxh0wN <leonardobennr@gmail.com>
+Date:   Thu Sep 18 05:05:34 2025 -0300
+
+    fix: resolver problemas de Redis e habilitar API
+    
+    ✅ Problemas resolvidos:
+    - Desabilitar temporariamente RedisService para evitar erros ECONNREFUSED
+    - Comentar BullModule no AppModule
+    - Simplificar IdempotencyInterceptor sem Redis
+    - Remover dependências RedisService dos módulos
+    - Renomear controllers V1 para nomes padrão
+    
+    � Resultado:
+    - API funcionando perfeitamente em http://localhost:3000
+    - Todos os endpoints V1 disponíveis e funcionando
+    - Autenticação funcionando (erro 403 esperado sem token)
+    - Health check respondendo corretamente
+    - Pronto para testes no Insomnia! �
+
+apps/api/src/app.module.ts
+apps/api/src/app.service.ts
+apps/api/src/common/interceptors/idempotency.interceptor.ts
+apps/api/src/infra/redis/redis.service.ts
+apps/api/src/infra/telemetry/tracing.ts
+apps/api/src/main.ts
+apps/api/src/modules/admin/admin-v1.controller.ts
+apps/api/src/modules/cart/cart-v1.controller.ts
+apps/api/src/modules/checkout/checkout-v1.controller.ts
+apps/api/src/modules/checkout/checkout.module.ts
+apps/api/src/modules/checkout/dto/create-order.dto.ts
+apps/api/src/modules/products/products-v1.controller.ts
+apps/api/src/modules/webhook/dto/create-webhook.dto.ts
+apps/api/src/modules/webhook/dto/webhook-event.dto.ts
+apps/api/src/modules/webhook/webhook-v1.controller.ts

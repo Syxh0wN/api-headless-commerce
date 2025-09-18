@@ -24,6 +24,9 @@ let ProductsController = class ProductsController {
     async findAll(query) {
         return this.productsService.findAll(query);
     }
+    async findBySlug(slug) {
+        return this.productsService.findBySlug(slug);
+    }
 };
 exports.ProductsController = ProductsController;
 __decorate([
@@ -35,6 +38,16 @@ __decorate([
     __metadata("design:paramtypes", [product_query_dto_1.ProductQueryDto]),
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)(':slug'),
+    (0, swagger_1.ApiOperation)({ summary: 'Obter produto por slug' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Produto encontrado' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Produto não encontrado' }),
+    __param(0, (0, common_1.Param)('slug')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], ProductsController.prototype, "findBySlug", null);
 exports.ProductsController = ProductsController = __decorate([
     (0, swagger_1.ApiTags)('Products'),
     (0, common_1.Controller)('products'),
