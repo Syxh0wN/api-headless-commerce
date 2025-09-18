@@ -50,15 +50,15 @@ describe('ProductsService', () => {
   });
 
   describe('create', () => {
-    const createProductDto = {
-      name: 'Produto Teste',
-      slug: 'produto-teste',
-      sku: 'SKU123',
-      description: 'Descrição do produto',
-      price: 9999,
-      categoryId: 'cat-1',
-      tags: ['tag1', 'tag2'],
-    };
+  const createProductDto = {
+    title: 'Produto Teste',
+    slug: 'produto-teste',
+    sku: 'SKU123',
+    description: 'Descrição do produto',
+    price: 9999,
+    categoryId: 'cat-1',
+    tags: ['tag1', 'tag2'],
+  };
 
     it('deve criar um produto com sucesso', async () => {
       mockPrismaService.product.create.mockResolvedValue(mockProduct);
