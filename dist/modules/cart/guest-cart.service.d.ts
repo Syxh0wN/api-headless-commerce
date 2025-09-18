@@ -10,9 +10,9 @@ export declare class GuestCartService {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        sessionId: string | null;
         status: import(".prisma/client").$Enums.CartStatus;
         currency: string;
+        sessionId: string | null;
         userId: string | null;
     }>;
     addItem(cartId: string, sessionId: string, addToCartDto: AddToCartDto): Promise<{

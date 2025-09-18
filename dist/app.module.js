@@ -11,7 +11,6 @@ const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const throttler_1 = require("@nestjs/throttler");
 const cache_manager_1 = require("@nestjs/cache-manager");
-const bullmq_1 = require("@nestjs/bullmq");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const prisma_service_1 = require("./infra/prisma/prisma.service");
@@ -40,12 +39,6 @@ exports.AppModule = AppModule = __decorate([
             ]),
             cache_manager_1.CacheModule.register({
                 isGlobal: true,
-            }),
-            bullmq_1.BullModule.forRoot({
-                connection: {
-                    host: process.env.REDIS_HOST || 'localhost',
-                    port: parseInt(process.env.REDIS_PORT || '6379'),
-                },
             }),
             auth_module_1.AuthModule,
             products_module_1.ProductsModule,

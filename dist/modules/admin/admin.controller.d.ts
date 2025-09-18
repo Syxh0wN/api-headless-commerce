@@ -9,90 +9,90 @@ export declare class AdminController {
     createProduct(createProductDto: CreateProductDto): Promise<{
         variants: {
             id: string;
+            version: number;
             createdAt: Date;
             updatedAt: Date;
-            productId: string;
-            currency: string;
-            isActive: boolean;
             sku: string;
+            isActive: boolean;
+            productId: string;
             attributes: import("@prisma/client/runtime/library").JsonValue;
             priceCents: number;
+            currency: string;
             inventoryQty: number;
-            version: number;
         }[];
     } & {
         description: string | null;
-        title: string;
         id: string;
+        title: string;
         createdAt: Date;
         updatedAt: Date;
-        status: import(".prisma/client").$Enums.ProductStatus;
         slug: string;
         shortDescription: string | null;
+        status: import(".prisma/client").$Enums.ProductStatus;
         brandId: string | null;
     }>;
     updateProduct(id: string, updateProductDto: UpdateProductDto): Promise<{
         variants: ({} & {
             id: string;
+            version: number;
             createdAt: Date;
             updatedAt: Date;
-            productId: string;
-            currency: string;
-            isActive: boolean;
             sku: string;
+            isActive: boolean;
+            productId: string;
             attributes: import("@prisma/client/runtime/library").JsonValue;
             priceCents: number;
+            currency: string;
             inventoryQty: number;
-            version: number;
         })[];
     } & {
         description: string | null;
-        title: string;
         id: string;
+        title: string;
         createdAt: Date;
         updatedAt: Date;
-        status: import(".prisma/client").$Enums.ProductStatus;
         slug: string;
         shortDescription: string | null;
+        status: import(".prisma/client").$Enums.ProductStatus;
         brandId: string | null;
     }>;
     removeProduct(id: string): Promise<void>;
     createVariant(productId: string, createVariantDto: any): Promise<{
         id: string;
+        version: number;
         createdAt: Date;
         updatedAt: Date;
-        productId: string;
-        currency: string;
-        isActive: boolean;
         sku: string;
+        isActive: boolean;
+        productId: string;
         attributes: import("@prisma/client/runtime/library").JsonValue;
         priceCents: number;
+        currency: string;
         inventoryQty: number;
-        version: number;
     }>;
     updateStock(variantId: string, stockDto: {
         quantity: number;
     }): Promise<{
         id: string;
+        version: number;
         createdAt: Date;
         updatedAt: Date;
-        productId: string;
-        currency: string;
-        isActive: boolean;
         sku: string;
+        isActive: boolean;
+        productId: string;
         attributes: import("@prisma/client/runtime/library").JsonValue;
         priceCents: number;
+        currency: string;
         inventoryQty: number;
-        version: number;
     }>;
     createPromoCode(createCouponDto: CreateCouponDto): Promise<{
         type: import(".prisma/client").$Enums.CouponType;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        code: string;
         isActive: boolean;
         value: number;
+        code: string;
         startsAt: Date | null;
         endsAt: Date | null;
         maxRedemptions: number | null;
@@ -103,9 +103,9 @@ export declare class AdminController {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        code: string;
         isActive: boolean;
         value: number;
+        code: string;
         startsAt: Date | null;
         endsAt: Date | null;
         maxRedemptions: number | null;
@@ -114,9 +114,9 @@ export declare class AdminController {
     removePromoCode(id: string): Promise<void>;
     listOrders(): Promise<({
         user: {
-            email: string;
             name: string;
             id: string;
+            email: string;
         };
         payment: {
             id: string;
@@ -134,21 +134,21 @@ export declare class AdminController {
         items: ({
             variant: {
                 product: {
-                    title: string;
                     id: string;
+                    title: string;
                 };
             } & {
                 id: string;
+                version: number;
                 createdAt: Date;
                 updatedAt: Date;
-                productId: string;
-                currency: string;
-                isActive: boolean;
                 sku: string;
+                isActive: boolean;
+                productId: string;
                 attributes: import("@prisma/client/runtime/library").JsonValue;
                 priceCents: number;
+                currency: string;
                 inventoryQty: number;
-                version: number;
             };
         } & {
             id: string;
@@ -160,10 +160,10 @@ export declare class AdminController {
         })[];
         shipping: {
             id: string;
+            state: string;
             createdAt: Date;
             updatedAt: Date;
             city: string;
-            state: string;
             zipCode: string;
             country: string;
             orderId: string;
@@ -191,9 +191,9 @@ export declare class AdminController {
         status: string;
     }): Promise<{
         user: {
-            email: string;
             name: string;
             id: string;
+            email: string;
         };
         payment: {
             id: string;
@@ -211,21 +211,21 @@ export declare class AdminController {
         items: ({
             variant: {
                 product: {
-                    title: string;
                     id: string;
+                    title: string;
                 };
             } & {
                 id: string;
+                version: number;
                 createdAt: Date;
                 updatedAt: Date;
-                productId: string;
-                currency: string;
-                isActive: boolean;
                 sku: string;
+                isActive: boolean;
+                productId: string;
                 attributes: import("@prisma/client/runtime/library").JsonValue;
                 priceCents: number;
+                currency: string;
                 inventoryQty: number;
-                version: number;
             };
         } & {
             id: string;
@@ -237,10 +237,10 @@ export declare class AdminController {
         })[];
         shipping: {
             id: string;
+            state: string;
             createdAt: Date;
             updatedAt: Date;
             city: string;
-            state: string;
             zipCode: string;
             country: string;
             orderId: string;

@@ -6,59 +6,59 @@ export declare class ProductsService {
     private prisma;
     constructor(prisma: PrismaService);
     create(createProductDto: CreateProductDto): Promise<{
+        description: string | null;
         id: string;
         title: string;
-        slug: string;
-        description: string | null;
-        shortDescription: string | null;
-        status: import(".prisma/client").$Enums.ProductStatus;
         createdAt: Date;
         updatedAt: Date;
+        slug: string;
+        shortDescription: string | null;
+        status: import(".prisma/client").$Enums.ProductStatus;
         brandId: string | null;
     }>;
     findAll(query: ProductQueryDto): Promise<{
         products: ({
             variants: {
                 id: string;
+                version: number;
                 createdAt: Date;
                 updatedAt: Date;
-                productId: string;
                 sku: string;
+                isActive: boolean;
+                productId: string;
                 attributes: import("@prisma/client/runtime/library").JsonValue;
                 priceCents: number;
                 currency: string;
                 inventoryQty: number;
-                version: number;
-                isActive: boolean;
             }[];
             productCategories: ({
                 category: {
-                    id: string;
-                    slug: string;
                     description: string | null;
+                    name: string;
+                    id: string;
                     createdAt: Date;
                     updatedAt: Date;
-                    name: string;
-                    sortOrder: number;
+                    slug: string;
                     isActive: boolean;
+                    sortOrder: number;
                     image: string | null;
                     parentId: string | null;
                 };
             } & {
                 id: string;
                 createdAt: Date;
-                productId: string;
                 categoryId: string;
+                productId: string;
             })[];
         } & {
+            description: string | null;
             id: string;
             title: string;
-            slug: string;
-            description: string | null;
-            shortDescription: string | null;
-            status: import(".prisma/client").$Enums.ProductStatus;
             createdAt: Date;
             updatedAt: Date;
+            slug: string;
+            shortDescription: string | null;
+            status: import(".prisma/client").$Enums.ProductStatus;
             brandId: string | null;
         })[];
         pagination: {
@@ -69,50 +69,50 @@ export declare class ProductsService {
         };
     }>;
     findOne(id: string): Promise<{
+        description: string | null;
         id: string;
         title: string;
-        slug: string;
-        description: string | null;
-        shortDescription: string | null;
-        status: import(".prisma/client").$Enums.ProductStatus;
         createdAt: Date;
         updatedAt: Date;
+        slug: string;
+        shortDescription: string | null;
+        status: import(".prisma/client").$Enums.ProductStatus;
         brandId: string | null;
     }>;
     findBySlug(slug: string): Promise<{
         variants: {
             id: string;
+            version: number;
             createdAt: Date;
             updatedAt: Date;
-            productId: string;
             sku: string;
+            isActive: boolean;
+            productId: string;
             attributes: import("@prisma/client/runtime/library").JsonValue;
             priceCents: number;
             currency: string;
             inventoryQty: number;
-            version: number;
-            isActive: boolean;
         }[];
     } & {
+        description: string | null;
         id: string;
         title: string;
-        slug: string;
-        description: string | null;
-        shortDescription: string | null;
-        status: import(".prisma/client").$Enums.ProductStatus;
         createdAt: Date;
         updatedAt: Date;
+        slug: string;
+        shortDescription: string | null;
+        status: import(".prisma/client").$Enums.ProductStatus;
         brandId: string | null;
     }>;
     update(id: string, updateProductDto: UpdateProductDto): Promise<{
+        description: string | null;
         id: string;
         title: string;
-        slug: string;
-        description: string | null;
-        shortDescription: string | null;
-        status: import(".prisma/client").$Enums.ProductStatus;
         createdAt: Date;
         updatedAt: Date;
+        slug: string;
+        shortDescription: string | null;
+        status: import(".prisma/client").$Enums.ProductStatus;
         brandId: string | null;
     }>;
     remove(id: string): Promise<{

@@ -7,46 +7,46 @@ export declare class ProductsController {
         products: ({
             variants: {
                 id: string;
+                version: number;
                 createdAt: Date;
                 updatedAt: Date;
-                productId: string;
                 sku: string;
+                isActive: boolean;
+                productId: string;
                 attributes: import("@prisma/client/runtime/library").JsonValue;
                 priceCents: number;
                 currency: string;
                 inventoryQty: number;
-                version: number;
-                isActive: boolean;
             }[];
             productCategories: ({
                 category: {
-                    id: string;
-                    slug: string;
                     description: string | null;
+                    name: string;
+                    id: string;
                     createdAt: Date;
                     updatedAt: Date;
-                    sortOrder: number;
-                    name: string;
+                    slug: string;
                     isActive: boolean;
+                    sortOrder: number;
                     image: string | null;
                     parentId: string | null;
                 };
             } & {
                 id: string;
                 createdAt: Date;
-                productId: string;
                 categoryId: string;
+                productId: string;
             })[];
         } & {
+            description: string | null;
             id: string;
             title: string;
+            createdAt: Date;
+            updatedAt: Date;
             slug: string;
-            description: string | null;
             shortDescription: string | null;
             status: import(".prisma/client").$Enums.ProductStatus;
             brandId: string | null;
-            createdAt: Date;
-            updatedAt: Date;
         })[];
         pagination: {
             page: number;
@@ -58,26 +58,26 @@ export declare class ProductsController {
     findBySlug(slug: string): Promise<{
         variants: {
             id: string;
+            version: number;
             createdAt: Date;
             updatedAt: Date;
-            productId: string;
             sku: string;
+            isActive: boolean;
+            productId: string;
             attributes: import("@prisma/client/runtime/library").JsonValue;
             priceCents: number;
             currency: string;
             inventoryQty: number;
-            version: number;
-            isActive: boolean;
         }[];
     } & {
+        description: string | null;
         id: string;
         title: string;
+        createdAt: Date;
+        updatedAt: Date;
         slug: string;
-        description: string | null;
         shortDescription: string | null;
         status: import(".prisma/client").$Enums.ProductStatus;
         brandId: string | null;
-        createdAt: Date;
-        updatedAt: Date;
     }>;
 }

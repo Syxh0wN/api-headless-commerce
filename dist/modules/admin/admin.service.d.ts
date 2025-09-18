@@ -14,26 +14,26 @@ export declare class AdminService {
         products: ({
             variants: ({} & {
                 id: string;
+                version: number;
                 createdAt: Date;
                 updatedAt: Date;
-                productId: string;
-                currency: string;
-                isActive: boolean;
                 sku: string;
+                isActive: boolean;
+                productId: string;
                 attributes: import("@prisma/client/runtime/library").JsonValue;
                 priceCents: number;
+                currency: string;
                 inventoryQty: number;
-                version: number;
             })[];
         } & {
             description: string | null;
-            title: string;
             id: string;
+            title: string;
             createdAt: Date;
             updatedAt: Date;
-            status: import(".prisma/client").$Enums.ProductStatus;
             slug: string;
             shortDescription: string | null;
+            status: import(".prisma/client").$Enums.ProductStatus;
             brandId: string | null;
         })[];
         pagination: {
@@ -46,51 +46,51 @@ export declare class AdminService {
     createProduct(createProductDto: CreateProductDto): Promise<{
         variants: {
             id: string;
+            version: number;
             createdAt: Date;
             updatedAt: Date;
-            productId: string;
-            currency: string;
-            isActive: boolean;
             sku: string;
+            isActive: boolean;
+            productId: string;
             attributes: import("@prisma/client/runtime/library").JsonValue;
             priceCents: number;
+            currency: string;
             inventoryQty: number;
-            version: number;
         }[];
     } & {
         description: string | null;
-        title: string;
         id: string;
+        title: string;
         createdAt: Date;
         updatedAt: Date;
-        status: import(".prisma/client").$Enums.ProductStatus;
         slug: string;
         shortDescription: string | null;
+        status: import(".prisma/client").$Enums.ProductStatus;
         brandId: string | null;
     }>;
     updateProduct(id: string, updateProductDto: UpdateProductDto): Promise<{
         variants: ({} & {
             id: string;
+            version: number;
             createdAt: Date;
             updatedAt: Date;
-            productId: string;
-            currency: string;
-            isActive: boolean;
             sku: string;
+            isActive: boolean;
+            productId: string;
             attributes: import("@prisma/client/runtime/library").JsonValue;
             priceCents: number;
+            currency: string;
             inventoryQty: number;
-            version: number;
         })[];
     } & {
         description: string | null;
-        title: string;
         id: string;
+        title: string;
         createdAt: Date;
         updatedAt: Date;
-        status: import(".prisma/client").$Enums.ProductStatus;
         slug: string;
         shortDescription: string | null;
+        status: import(".prisma/client").$Enums.ProductStatus;
         brandId: string | null;
     }>;
     deleteProduct(id: string): Promise<{
@@ -99,42 +99,42 @@ export declare class AdminService {
     removeProduct(id: string): Promise<void>;
     getProductVariants(productId: string): Promise<({} & {
         id: string;
+        version: number;
         createdAt: Date;
         updatedAt: Date;
-        productId: string;
-        currency: string;
-        isActive: boolean;
         sku: string;
+        isActive: boolean;
+        productId: string;
         attributes: import("@prisma/client/runtime/library").JsonValue;
         priceCents: number;
+        currency: string;
         inventoryQty: number;
-        version: number;
     })[]>;
     createProductVariant(productId: string, variantData: any): Promise<{} & {
         id: string;
+        version: number;
         createdAt: Date;
         updatedAt: Date;
-        productId: string;
-        currency: string;
-        isActive: boolean;
         sku: string;
+        isActive: boolean;
+        productId: string;
         attributes: import("@prisma/client/runtime/library").JsonValue;
         priceCents: number;
+        currency: string;
         inventoryQty: number;
-        version: number;
     }>;
     updateInventory(variantId: string, inventoryData: any): Promise<{
         id: string;
+        version: number;
         createdAt: Date;
         updatedAt: Date;
-        productId: string;
-        currency: string;
-        isActive: boolean;
         sku: string;
+        isActive: boolean;
+        productId: string;
         attributes: import("@prisma/client/runtime/library").JsonValue;
         priceCents: number;
+        currency: string;
         inventoryQty: number;
-        version: number;
     }>;
     getCoupons(): Promise<{
         description: string | null;
@@ -143,9 +143,9 @@ export declare class AdminService {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        code: string;
         isActive: boolean;
         value: number;
+        code: string;
         minimumAmount: number | null;
         maximumDiscount: number | null;
         validUntil: Date | null;
@@ -160,9 +160,9 @@ export declare class AdminService {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        code: string;
         isActive: boolean;
         value: number;
+        code: string;
         minimumAmount: number | null;
         maximumDiscount: number | null;
         validUntil: Date | null;
@@ -177,9 +177,9 @@ export declare class AdminService {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        code: string;
         isActive: boolean;
         value: number;
+        code: string;
         minimumAmount: number | null;
         maximumDiscount: number | null;
         validUntil: Date | null;
@@ -193,9 +193,9 @@ export declare class AdminService {
     getAllOrders(query: any): Promise<{
         orders: ({
             user: {
-                email: string;
                 name: string;
                 id: string;
+                email: string;
             };
             items: ({
                 variant: {
@@ -212,10 +212,10 @@ export declare class AdminService {
             })[];
             shipping: {
                 id: string;
+                state: string;
                 createdAt: Date;
                 updatedAt: Date;
                 city: string;
-                state: string;
                 zipCode: string;
                 country: string;
                 orderId: string;
@@ -248,38 +248,38 @@ export declare class AdminService {
     }>;
     createVariant(productId: string, createVariantDto: any): Promise<{
         id: string;
+        version: number;
         createdAt: Date;
         updatedAt: Date;
-        productId: string;
-        currency: string;
-        isActive: boolean;
         sku: string;
+        isActive: boolean;
+        productId: string;
         attributes: import("@prisma/client/runtime/library").JsonValue;
         priceCents: number;
+        currency: string;
         inventoryQty: number;
-        version: number;
     }>;
     updateStock(variantId: string, quantity: number): Promise<{
         id: string;
+        version: number;
         createdAt: Date;
         updatedAt: Date;
-        productId: string;
-        currency: string;
-        isActive: boolean;
         sku: string;
+        isActive: boolean;
+        productId: string;
         attributes: import("@prisma/client/runtime/library").JsonValue;
         priceCents: number;
+        currency: string;
         inventoryQty: number;
-        version: number;
     }>;
     createPromoCode(createCouponDto: CreateCouponDto): Promise<{
         type: import(".prisma/client").$Enums.CouponType;
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        code: string;
         isActive: boolean;
         value: number;
+        code: string;
         startsAt: Date | null;
         endsAt: Date | null;
         maxRedemptions: number | null;
@@ -290,9 +290,9 @@ export declare class AdminService {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        code: string;
         isActive: boolean;
         value: number;
+        code: string;
         startsAt: Date | null;
         endsAt: Date | null;
         maxRedemptions: number | null;
@@ -301,9 +301,9 @@ export declare class AdminService {
     removePromoCode(id: string): Promise<void>;
     listOrders(): Promise<({
         user: {
-            email: string;
             name: string;
             id: string;
+            email: string;
         };
         payment: {
             id: string;
@@ -321,21 +321,21 @@ export declare class AdminService {
         items: ({
             variant: {
                 product: {
-                    title: string;
                     id: string;
+                    title: string;
                 };
             } & {
                 id: string;
+                version: number;
                 createdAt: Date;
                 updatedAt: Date;
-                productId: string;
-                currency: string;
-                isActive: boolean;
                 sku: string;
+                isActive: boolean;
+                productId: string;
                 attributes: import("@prisma/client/runtime/library").JsonValue;
                 priceCents: number;
+                currency: string;
                 inventoryQty: number;
-                version: number;
             };
         } & {
             id: string;
@@ -347,10 +347,10 @@ export declare class AdminService {
         })[];
         shipping: {
             id: string;
+            state: string;
             createdAt: Date;
             updatedAt: Date;
             city: string;
-            state: string;
             zipCode: string;
             country: string;
             orderId: string;
@@ -376,9 +376,9 @@ export declare class AdminService {
     })[]>;
     updateOrderStatus(id: string, status: string): Promise<{
         user: {
-            email: string;
             name: string;
             id: string;
+            email: string;
         };
         payment: {
             id: string;
@@ -396,21 +396,21 @@ export declare class AdminService {
         items: ({
             variant: {
                 product: {
-                    title: string;
                     id: string;
+                    title: string;
                 };
             } & {
                 id: string;
+                version: number;
                 createdAt: Date;
                 updatedAt: Date;
-                productId: string;
-                currency: string;
-                isActive: boolean;
                 sku: string;
+                isActive: boolean;
+                productId: string;
                 attributes: import("@prisma/client/runtime/library").JsonValue;
                 priceCents: number;
+                currency: string;
                 inventoryQty: number;
-                version: number;
             };
         } & {
             id: string;
@@ -422,10 +422,10 @@ export declare class AdminService {
         })[];
         shipping: {
             id: string;
+            state: string;
             createdAt: Date;
             updatedAt: Date;
             city: string;
-            state: string;
             zipCode: string;
             country: string;
             orderId: string;

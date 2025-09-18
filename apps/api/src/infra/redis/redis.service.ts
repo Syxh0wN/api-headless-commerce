@@ -6,23 +6,29 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   private client: RedisClientType;
 
   async onModuleInit() {
-    try {
-      this.client = createClient({
-        socket: {
-          host: process.env.REDIS_HOST || 'localhost',
-          port: parseInt(process.env.REDIS_PORT || '6379'),
-        },
-        password: process.env.REDIS_PASSWORD,
-      });
+    // Redis desabilitado por padrão - só conecta se explicitamente habilitado
+    if (process.env.REDIS_ENABLED === 'true') {
+      try {
+        this.client = createClient({
+          socket: {
+            host: process.env.REDIS_HOST || 'localhost',
+            port: parseInt(process.env.REDIS_PORT || '6379'),
+          },
+          password: process.env.REDIS_PASSWORD,
+        });
 
-      this.client.on('error', (err) => {
-        console.error('Redis Client Error', err);
-      });
+        this.client.on('error', (err) => {
+          console.error('Redis Client Error', err);
+        });
 
-      await this.client.connect();
-      console.log('Redis conectado com sucesso');
-    } catch (error) {
-      console.warn('Redis não disponível, continuando sem cache:', error.message);
+        await this.client.connect();
+        console.log('Redis conectado com sucesso');
+      } catch (error) {
+        console.warn('Redis não disponível, continuando sem cache:', error.message);
+        this.client = null;
+      }
+    } else {
+      console.log('Redis desabilitado - usando modo sem cache');
       this.client = null;
     }
   }

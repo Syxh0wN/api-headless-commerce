@@ -6,11 +6,11 @@ export declare class AuthController {
     constructor(authService: AuthService);
     register(registerDto: RegisterDto): Promise<{
         user: {
-            email: string;
-            name: string | null;
-            password: string;
-            id: string;
             role: import(".prisma/client").$Enums.UserRole;
+            name: string | null;
+            id: string;
+            email: string;
+            password: string;
             createdAt: Date;
             updatedAt: Date;
         };

@@ -11,22 +11,28 @@ const common_1 = require("@nestjs/common");
 const redis_1 = require("redis");
 let RedisService = class RedisService {
     async onModuleInit() {
-        try {
-            this.client = (0, redis_1.createClient)({
-                socket: {
-                    host: process.env.REDIS_HOST || 'localhost',
-                    port: parseInt(process.env.REDIS_PORT || '6379'),
-                },
-                password: process.env.REDIS_PASSWORD,
-            });
-            this.client.on('error', (err) => {
-                console.error('Redis Client Error', err);
-            });
-            await this.client.connect();
-            console.log('Redis conectado com sucesso');
+        if (process.env.REDIS_ENABLED === 'true') {
+            try {
+                this.client = (0, redis_1.createClient)({
+                    socket: {
+                        host: process.env.REDIS_HOST || 'localhost',
+                        port: parseInt(process.env.REDIS_PORT || '6379'),
+                    },
+                    password: process.env.REDIS_PASSWORD,
+                });
+                this.client.on('error', (err) => {
+                    console.error('Redis Client Error', err);
+                });
+                await this.client.connect();
+                console.log('Redis conectado com sucesso');
+            }
+            catch (error) {
+                console.warn('Redis não disponível, continuando sem cache:', error.message);
+                this.client = null;
+            }
         }
-        catch (error) {
-            console.warn('Redis não disponível, continuando sem cache:', error.message);
+        else {
+            console.log('Redis desabilitado - usando modo sem cache');
             this.client = null;
         }
     }
