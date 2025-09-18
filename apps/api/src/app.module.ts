@@ -5,6 +5,8 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { BullModule } from '@nestjs/bullmq';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { PrismaService } from './infra/prisma/prisma.service';
+import { RedisService } from './infra/redis/redis.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { ProductsModule } from './modules/products/products.module';
 import { CartModule } from './modules/cart/cart.module';
@@ -39,6 +41,6 @@ import { WebhookModule } from './modules/webhook/webhook.module';
     WebhookModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, PrismaService, RedisService],
 })
 export class AppModule {}

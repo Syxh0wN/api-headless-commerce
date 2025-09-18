@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { PrismaService } from './infra/prisma/prisma.service';
+import { RedisService } from './infra/redis/redis.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -26,11 +28,18 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
+  const prismaService = app.get(PrismaService);
+  const redisService = app.get(RedisService);
+
+  await prismaService.$connect();
+  await redisService.connect();
+
   const port = process.env.PORT || 3000;
   await app.listen(port);
 
   console.log(`API rodando em http://localhost:${port}`);
   console.log(`Documentacao em http://localhost:${port}/api/docs`);
+  console.log(`Health check em http://localhost:${port}/api/health`);
 }
 
 void bootstrap();

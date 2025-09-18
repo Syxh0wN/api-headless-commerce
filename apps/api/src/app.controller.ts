@@ -20,4 +20,11 @@ export class AppController {
   getHealth() {
     return this.appService.getHealth();
   }
+
+  @Get('ready')
+  @ApiOperation({ summary: 'Readiness check da API' })
+  @ApiResponse({ status: 200, description: 'Status de prontidão da aplicação' })
+  getReadiness() {
+    return this.appService.getReadiness();
+  }
 }

@@ -64,4 +64,14 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     const lockKey = `lock:${key}`;
     await this.client.del(lockKey);
   }
+
+  async ping(): Promise<string> {
+    return await this.client.ping();
+  }
+
+  async connect(): Promise<void> {
+    if (!this.client.isOpen) {
+      await this.client.connect();
+    }
+  }
 }
