@@ -13,6 +13,7 @@ export class ProductsService {
       data: {
         ...createProductDto,
         isActive: createProductDto.isActive ?? true,
+        tags: createProductDto.tags ?? [],
       },
     });
 
@@ -35,7 +36,7 @@ export class ProductsService {
     }
 
     if (category) {
-      where.category = category;
+      where.categoryId = category;
     }
 
     const [products, total] = await Promise.all([
@@ -76,7 +77,10 @@ export class ProductsService {
 
     const updatedProduct = await this.prisma.product.update({
       where: { id },
-      data: updateProductDto,
+      data: {
+        ...updateProductDto,
+        tags: updateProductDto.tags ?? product.tags,
+      },
     });
 
     return updatedProduct;
