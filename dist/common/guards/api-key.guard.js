@@ -6,24 +6,23 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppService = void 0;
+exports.ApiKeyGuard = void 0;
 const common_1 = require("@nestjs/common");
-let AppService = class AppService {
-    getHello() {
-        return 'Headless Commerce API - Funcionando!';
-    }
-    getHealth() {
-        return {
-            status: 'ok',
-            timestamp: new Date().toISOString(),
-            uptime: process.uptime(),
-            version: process.env.npm_package_version || '1.0.0',
-            environment: process.env.NODE_ENV || 'development',
-        };
+let ApiKeyGuard = class ApiKeyGuard {
+    canActivate(context) {
+        const request = context.switchToHttp().getRequest();
+        const apiKey = request.headers['x-api-key'];
+        if (!apiKey) {
+            throw new common_1.UnauthorizedException('API Key nao fornecida');
+        }
+        if (apiKey !== process.env.API_KEY_SECRET) {
+            throw new common_1.UnauthorizedException('API Key invalida');
+        }
+        return true;
     }
 };
-exports.AppService = AppService;
-exports.AppService = AppService = __decorate([
+exports.ApiKeyGuard = ApiKeyGuard;
+exports.ApiKeyGuard = ApiKeyGuard = __decorate([
     (0, common_1.Injectable)()
-], AppService);
-//# sourceMappingURL=app.service.js.map
+], ApiKeyGuard);
+//# sourceMappingURL=api-key.guard.js.map
