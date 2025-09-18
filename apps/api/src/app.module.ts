@@ -9,6 +9,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ProductsModule } from './modules/products/products.module';
 import { CartModule } from './modules/cart/cart.module';
 import { CheckoutModule } from './modules/checkout/checkout.module';
+import { WebhookModule } from './modules/webhook/webhook.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { CheckoutModule } from './modules/checkout/checkout.module';
     ProductsModule,
     CartModule,
     CheckoutModule,
+    WebhookModule,
   ],
   controllers: [AppController],
   providers: [AppService],
