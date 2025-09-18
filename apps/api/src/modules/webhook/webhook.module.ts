@@ -3,12 +3,13 @@ import { WebhookController } from './webhook.controller';
 import { WebhookService } from './webhook.service';
 import { WebhookEventService } from './webhook-event.service';
 import { PrismaService } from '../../infra/prisma/prisma.service';
+import { ApiKeyService } from '../../common/auth/api-key.service';
 import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [AuthModule],
   controllers: [WebhookController],
-  providers: [WebhookService, WebhookEventService, PrismaService],
+  providers: [WebhookService, WebhookEventService, PrismaService, ApiKeyService],
   exports: [WebhookService, WebhookEventService],
 })
 export class WebhookModule {}
