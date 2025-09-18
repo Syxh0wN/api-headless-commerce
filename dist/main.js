@@ -24,5 +24,5 @@ async function bootstrap() {
     console.log(`API rodando em http://localhost:${port}`);
     console.log(`Documentacao em http://localhost:${port}/api/docs`);
 }
-bootstrap();
+void bootstrap();
 //# sourceMappingURL=main.js.map

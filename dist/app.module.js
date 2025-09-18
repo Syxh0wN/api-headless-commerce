@@ -14,6 +14,7 @@ const cache_manager_1 = require("@nestjs/cache-manager");
 const bullmq_1 = require("@nestjs/bullmq");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
+const auth_module_1 = require("./modules/auth/auth.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -39,6 +40,7 @@ exports.AppModule = AppModule = __decorate([
                     port: parseInt(process.env.REDIS_PORT || '6379'),
                 },
             }),
+            auth_module_1.AuthModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
