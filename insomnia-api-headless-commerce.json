@@ -1,0 +1,664 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2025-09-18T07:50:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "req_health_check",
+      "parentId": "fld_health",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/health",
+      "name": "Health Check",
+      "description": "Verificar status da API",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_readiness_check",
+      "parentId": "fld_health",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/ready",
+      "name": "Readiness Check",
+      "description": "Verificar prontidão da API",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_get_products",
+      "parentId": "fld_products",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/products",
+      "name": "Listar Produtos",
+      "description": "Obter lista de produtos",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "page",
+          "value": "1",
+          "description": "Página (padrão: 1)",
+          "disabled": true
+        },
+        {
+          "name": "limit",
+          "value": "10",
+          "description": "Limite por página (padrão: 10)",
+          "disabled": true
+        },
+        {
+          "name": "search",
+          "value": "",
+          "description": "Termo de busca",
+          "disabled": true
+        },
+        {
+          "name": "category",
+          "value": "",
+          "description": "ID da categoria",
+          "disabled": true
+        },
+        {
+          "name": "sortBy",
+          "value": "createdAt",
+          "description": "Campo para ordenação",
+          "disabled": true
+        },
+        {
+          "name": "sortOrder",
+          "value": "desc",
+          "description": "Ordem (asc/desc)",
+          "disabled": true
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_cart",
+      "parentId": "fld_cart",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/v1/carts",
+      "name": "Criar Carrinho",
+      "description": "Criar novo carrinho para guest",
+      "method": "POST",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_add_to_cart",
+      "parentId": "fld_cart",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/v1/carts/{{ _.cart_id }}/items",
+      "name": "Adicionar ao Carrinho",
+      "description": "Adicionar item ao carrinho",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"productId\": \"product-1\",\n  \"quantity\": 2\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_get_cart",
+      "parentId": "fld_cart",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/v1/carts/{{ _.cart_id }}",
+      "name": "Obter Carrinho",
+      "description": "Obter carrinho com totais",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_update_cart_item",
+      "parentId": "fld_cart",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/v1/carts/{{ _.cart_id }}/items/{{ _.item_id }}",
+      "name": "Atualizar Item",
+      "description": "Atualizar quantidade do item",
+      "method": "PATCH",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"quantity\": 3\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_remove_cart_item",
+      "parentId": "fld_cart",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/v1/carts/{{ _.cart_id }}/items/{{ _.item_id }}",
+      "name": "Remover Item",
+      "description": "Remover item do carrinho",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_apply_promo",
+      "parentId": "fld_cart",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/v1/carts/{{ _.cart_id }}/apply-promo",
+      "name": "Aplicar Promoção",
+      "description": "Aplicar código promocional",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"code\": \"DESCONTO10\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_order",
+      "parentId": "fld_checkout",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/v1/checkout",
+      "name": "Criar Pedido",
+      "description": "Processar checkout e criar pedido",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"cartId\": \"{{ _.cart_id }}\",\n  \"paymentMethod\": \"CREDIT_CARD\",\n  \"shippingAddress\": {\n    \"street\": \"Rua das Flores, 123\",\n    \"number\": \"123\",\n    \"complement\": \"Apto 1\",\n    \"neighborhood\": \"Centro\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"zipCode\": \"01234-567\",\n    \"country\": \"BR\"\n  },\n  \"notes\": \"Pedido de teste\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        },
+        {
+          "name": "Idempotency-Key",
+          "value": "{{ _.idempotency_key }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_get_order",
+      "parentId": "fld_checkout",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/v1/checkout/orders/{{ _.order_id }}",
+      "name": "Obter Pedido",
+      "description": "Obter pedido por ID",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_list_orders",
+      "parentId": "fld_checkout",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/v1/checkout/orders",
+      "name": "Listar Pedidos",
+      "description": "Listar pedidos do usuário",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_product",
+      "parentId": "fld_admin",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/v1/admin/products",
+      "name": "Criar Produto",
+      "description": "Criar novo produto (RBAC: ADMIN/STAFF)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"title\": \"Produto Teste\",\n  \"slug\": \"produto-teste\",\n  \"sku\": \"SKU123\",\n  \"description\": \"Descrição do produto teste\",\n  \"price\": 9999,\n  \"categoryId\": \"cat-1\",\n  \"tags\": [\"teste\", \"produto\"],\n  \"isActive\": true\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.admin_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_update_product",
+      "parentId": "fld_admin",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/v1/admin/products/{{ _.product_id }}",
+      "name": "Atualizar Produto",
+      "description": "Atualizar produto (RBAC: ADMIN/STAFF)",
+      "method": "PATCH",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"title\": \"Produto Atualizado\",\n  \"slug\": \"produto-atualizado\",\n  \"description\": \"Descrição atualizada\",\n  \"isActive\": true\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.admin_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_promo_code",
+      "parentId": "fld_admin",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/v1/admin/promo-codes",
+      "name": "Criar Código Promocional",
+      "description": "Criar código promocional (RBAC: ADMIN/STAFF)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"code\": \"DESCONTO10\",\n  \"description\": \"10% de desconto\",\n  \"type\": \"PERCENTAGE\",\n  \"value\": 10,\n  \"minOrderValue\": 5000,\n  \"maxDiscountValue\": 1000,\n  \"usageLimit\": 100,\n  \"startsAt\": \"2025-01-01T00:00:00Z\",\n  \"expiresAt\": \"2025-12-31T23:59:59Z\",\n  \"isActive\": true\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.admin_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_list_orders_admin",
+      "parentId": "fld_admin",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/v1/admin/orders",
+      "name": "Listar Pedidos (Admin)",
+      "description": "Listar todos os pedidos (RBAC: ADMIN/STAFF)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.admin_token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_webhook_test",
+      "parentId": "fld_webhooks",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/v1/webhooks/test-provider",
+      "name": "Testar Webhook",
+      "description": "Testar webhook de provider específico",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"event\": \"order.created\",\n  \"data\": {\n    \"orderId\": \"order-123\",\n    \"status\": \"pending\"\n  },\n  \"timestamp\": \"2025-09-18T07:50:00Z\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "X-API-Key",
+          "value": "{{ _.api_key }}"
+        },
+        {
+          "name": "X-Webhook-Signature",
+          "value": "sha256=test-signature"
+        },
+        {
+          "name": "X-Webhook-Id",
+          "value": "webhook-123"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_health",
+      "parentId": "wrk_headless_commerce",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "name": "Health Checks",
+      "description": "Endpoints de verificação de saúde da API",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1758181500000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_products",
+      "parentId": "wrk_headless_commerce",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "name": "Products",
+      "description": "Endpoints do catálogo de produtos",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1758181500000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_cart",
+      "parentId": "wrk_headless_commerce",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "name": "Cart",
+      "description": "Endpoints do carrinho de compras",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1758181500000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_checkout",
+      "parentId": "wrk_headless_commerce",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "name": "Checkout",
+      "description": "Endpoints de checkout e pedidos",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1758181500000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_admin",
+      "parentId": "wrk_headless_commerce",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "name": "Admin",
+      "description": "Endpoints administrativos (RBAC)",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1758181500000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_webhooks",
+      "parentId": "wrk_headless_commerce",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "name": "Webhooks",
+      "description": "Endpoints de webhooks",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1758181500000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "wrk_headless_commerce",
+      "parentId": null,
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "name": "Headless Commerce API",
+      "description": "API de E-commerce Headless com NestJS, TypeScript e Prisma",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_base",
+      "parentId": "wrk_headless_commerce",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3000",
+        "cart_id": "cart-123",
+        "item_id": "item-123",
+        "order_id": "order-123",
+        "product_id": "product-123",
+        "auth_token": "your-jwt-token-here",
+        "admin_token": "your-admin-jwt-token-here",
+        "api_key": "your-api-key-here",
+        "idempotency_key": "req-{{ $timestamp }}"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url",
+          "cart_id",
+          "item_id",
+          "order_id",
+          "product_id",
+          "auth_token",
+          "admin_token",
+          "api_key",
+          "idempotency_key"
+        ]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1758181500000,
+      "_type": "environment"
+    }
+  ]
+}
