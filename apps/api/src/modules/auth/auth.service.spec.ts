@@ -95,12 +95,6 @@ describe('AuthService', () => {
       password: 'password123',
     };
 
-    const registerDto = {
-      email: 'test@email.com',
-      name: 'Test User',
-      password: 'password123',
-    };
-
     it('deve fazer login com sucesso', async () => {
       mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);

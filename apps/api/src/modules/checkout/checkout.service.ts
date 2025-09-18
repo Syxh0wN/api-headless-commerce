@@ -1,14 +1,24 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderStatusDto, OrderStatus, PaymentStatus } from './dto/update-order-status.dto';
+import {
+  UpdateOrderStatusDto,
+  OrderStatus,
+} from './dto/update-order-status.dto';
 import { OrderResponseDto } from './dto/order-response.dto';
 
 @Injectable()
 export class CheckoutService {
   constructor(private prisma: PrismaService) {}
 
-  async createOrder(userId: string, createOrderDto: CreateOrderDto): Promise<OrderResponseDto> {
+  async createOrder(
+    userId: string,
+    createOrderDto: CreateOrderDto,
+  ): Promise<OrderResponseDto> {
     const cart = await this.prisma.cart.findUnique({
       where: { userId },
       include: {
@@ -35,14 +45,22 @@ export class CheckoutService {
 
     for (const item of cart.items) {
       if (!item.product.isActive) {
-        throw new BadRequestException(`Produto ${item.product.name} não está disponível`);
+        throw new BadRequestException(
+          `Produto ${item.product.name} não está disponível`,
+        );
       }
     }
 
-    const subtotal = cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const subtotal = cart.items.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0,
+    );
     const shippingCost = this.calculateShippingCost(subtotal);
     const taxAmount = this.calculateTax(subtotal);
-    const discountAmount = await this.calculateDiscount(createOrderDto.couponCode, subtotal);
+    const discountAmount = await this.calculateDiscount(
+      createOrderDto.couponCode,
+      subtotal,
+    );
     const total = subtotal + shippingCost + taxAmount - discountAmount;
 
     const orderNumber = this.generateOrderNumber();
@@ -59,8 +77,13 @@ export class CheckoutService {
         total,
         shipping: {
           create: {
-            firstName: createOrderDto.shippingAddress.street.split(' ')[0] || 'Nome',
-            lastName: createOrderDto.shippingAddress.street.split(' ').slice(1).join(' ') || 'Sobrenome',
+            firstName:
+              createOrderDto.shippingAddress.street.split(' ')[0] || 'Nome',
+            lastName:
+              createOrderDto.shippingAddress.street
+                .split(' ')
+                .slice(1)
+                .join(' ') || 'Sobrenome',
             address1: createOrderDto.shippingAddress.street,
             address2: createOrderDto.shippingAddress.complement,
             city: createOrderDto.shippingAddress.city,
@@ -134,7 +157,11 @@ export class CheckoutService {
     return this.mapOrderToResponse(order);
   }
 
-  async getUserOrders(userId: string, page = 1, limit = 10): Promise<{
+  async getUserOrders(
+    userId: string,
+    page = 1,
+    limit = 10,
+  ): Promise<{
     orders: OrderResponseDto[];
     pagination: {
       page: number;
@@ -247,7 +274,10 @@ export class CheckoutService {
     return Math.round(subtotal * 0.1);
   }
 
-  private async calculateDiscount(couponCode?: string, subtotal?: number): Promise<number> {
+  private async calculateDiscount(
+    couponCode?: string,
+    subtotal?: number,
+  ): Promise<number> {
     if (!couponCode || !subtotal) {
       return 0;
     }
@@ -291,16 +321,18 @@ export class CheckoutService {
       total: order.total,
       paymentMethod: order.payment?.method || 'PENDING',
       paymentStatus: order.payment?.status || 'PENDING',
-      shippingAddress: order.shipping ? {
-        street: order.shipping.address1,
-        number: order.shipping.address2 || '',
-        complement: order.shipping.address2,
-        neighborhood: order.shipping.city,
-        city: order.shipping.city,
-        state: order.shipping.state,
-        zipCode: order.shipping.zipCode,
-        country: order.shipping.country,
-      } : null,
+      shippingAddress: order.shipping
+        ? {
+            street: order.shipping.address1,
+            number: order.shipping.address2 || '',
+            complement: order.shipping.address2,
+            neighborhood: order.shipping.city,
+            city: order.shipping.city,
+            state: order.shipping.state,
+            zipCode: order.shipping.zipCode,
+            country: order.shipping.country,
+          }
+        : null,
       items: order.items.map((item: any) => ({
         id: item.id,
         productId: item.productId,

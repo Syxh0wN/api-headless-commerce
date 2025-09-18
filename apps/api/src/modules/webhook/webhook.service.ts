@@ -1,9 +1,10 @@
 import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../infra/prisma/prisma.service';
-import { WebhookEventDto, WebhookEventType, WebhookSource } from './dto/webhook-event.dto';
+import { WebhookEventDto, WebhookEventType } from './dto/webhook-event.dto';
 import { CreateWebhookDto } from './dto/create-webhook.dto';
 import { WebhookResponseDto } from './dto/webhook-response.dto';
 import { DeliveryStatus } from '@prisma/client';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class WebhookService {
@@ -11,7 +12,9 @@ export class WebhookService {
 
   constructor(private prisma: PrismaService) {}
 
-  async createWebhook(createWebhookDto: CreateWebhookDto): Promise<WebhookResponseDto> {
+  async createWebhook(
+    createWebhookDto: CreateWebhookDto,
+  ): Promise<WebhookResponseDto> {
     const webhook = await this.prisma.webhook.create({
       data: {
         url: createWebhookDto.url,
@@ -61,7 +64,10 @@ export class WebhookService {
     return this.mapWebhookToResponse(webhook);
   }
 
-  async updateWebhook(id: string, updateData: Partial<CreateWebhookDto>): Promise<WebhookResponseDto> {
+  async updateWebhook(
+    id: string,
+    updateData: Partial<CreateWebhookDto>,
+  ): Promise<WebhookResponseDto> {
     const webhook = await this.prisma.webhook.update({
       where: { id },
       data: updateData,
@@ -101,7 +107,10 @@ export class WebhookService {
     }
   }
 
-  async deliverWebhook(webhookId: string, event: WebhookEventDto): Promise<void> {
+  async deliverWebhook(
+    webhookId: string,
+    event: WebhookEventDto,
+  ): Promise<void> {
     const webhook = await this.prisma.webhook.findUnique({
       where: { id: webhookId },
     });
@@ -137,12 +146,12 @@ export class WebhookService {
     const baseDelay = 1000;
 
     if (delivery.attempts >= maxAttempts) {
-        await this.prisma.webhookDelivery.update({
-          where: { id: deliveryId },
-          data: {
-            status: DeliveryStatus.FAILED,
-          },
-        });
+      await this.prisma.webhookDelivery.update({
+        where: { id: deliveryId },
+        data: {
+          status: DeliveryStatus.FAILED,
+        },
+      });
       return;
     }
 
@@ -151,7 +160,10 @@ export class WebhookService {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Webhook-Signature': this.generateSignature(JSON.stringify(delivery.payload), delivery.webhook.secret),
+          'X-Webhook-Signature': this.generateSignature(
+            JSON.stringify(delivery.payload),
+            delivery.webhook.secret,
+          ),
           'X-Webhook-Event': delivery.event,
         },
         body: JSON.stringify(delivery.payload),
@@ -162,7 +174,9 @@ export class WebhookService {
           where: { id: deliveryId },
           data: {
             status: DeliveryStatus.DELIVERED,
-            response: await response.json().catch(() => ({ status: response.status })),
+            response: await response
+              .json()
+              .catch(() => ({ status: response.status })),
             attempts: delivery.attempts + 1,
             deliveredAt: new Date(),
           },
@@ -171,7 +185,9 @@ export class WebhookService {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
     } catch (error) {
-      const nextRetryAt = new Date(Date.now() + baseDelay * Math.pow(2, delivery.attempts));
+      const nextRetryAt = new Date(
+        Date.now() + baseDelay * Math.pow(2, delivery.attempts),
+      );
 
       await this.prisma.webhookDelivery.update({
         where: { id: deliveryId },
@@ -183,9 +199,12 @@ export class WebhookService {
         },
       });
 
-      setTimeout(() => {
-        this.executeDelivery(deliveryId);
-      }, baseDelay * Math.pow(2, delivery.attempts));
+      setTimeout(
+        () => {
+          void this.executeDelivery(deliveryId);
+        },
+        baseDelay * Math.pow(2, delivery.attempts),
+      );
     }
   }
 
@@ -247,7 +266,6 @@ export class WebhookService {
       return '';
     }
 
-    const crypto = require('crypto');
     return crypto.createHmac('sha256', secret).update(payload).digest('hex');
   }
 
@@ -265,7 +283,9 @@ export class WebhookService {
         url: webhook.url,
         status: delivery.status,
         statusCode: delivery.response?.status,
-        responseBody: delivery.response ? JSON.stringify(delivery.response) : undefined,
+        responseBody: delivery.response
+          ? JSON.stringify(delivery.response)
+          : undefined,
         attempts: delivery.attempts,
         lastAttemptAt: delivery.deliveredAt,
         nextRetryAt: delivery.nextRetryAt,

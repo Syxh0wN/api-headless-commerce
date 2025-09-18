@@ -3,7 +3,11 @@ import { BadRequestException } from '@nestjs/common';
 import { WebhookService } from './webhook.service';
 import { PrismaService } from '../../infra/prisma/prisma.service';
 import { CreateWebhookDto } from './dto/create-webhook.dto';
-import { WebhookEventDto, WebhookEventType, WebhookSource } from './dto/webhook-event.dto';
+import {
+  WebhookEventDto,
+  WebhookEventType,
+  WebhookSource,
+} from './dto/webhook-event.dto';
 import { DeliveryStatus } from '@prisma/client';
 
 describe('WebhookService', () => {
@@ -205,9 +209,11 @@ describe('WebhookService', () => {
 
     it('deve processar evento e criar entregas', async () => {
       mockPrismaService.webhook.findMany.mockResolvedValue([mockWebhook]);
-      
+
       // Mock do deliverWebhook para evitar chamadas reais
-      jest.spyOn(service, 'deliverWebhook').mockResolvedValue(undefined);
+      const deliverWebhookSpy = jest
+        .spyOn(service, 'deliverWebhook')
+        .mockResolvedValue(undefined);
 
       await service.processWebhookEvent(webhookEvent);
 
@@ -219,7 +225,7 @@ describe('WebhookService', () => {
           },
         },
       });
-      expect(service.deliverWebhook).toHaveBeenCalledWith('webhook-1', webhookEvent);
+      expect(deliverWebhookSpy).toHaveBeenCalledWith('webhook-1', webhookEvent);
     });
 
     it('deve ignorar webhooks inativos', async () => {
@@ -277,7 +283,9 @@ describe('WebhookService', () => {
         nextRetryAt: new Date(Date.now() - 1000),
       };
 
-      mockPrismaService.webhookDelivery.findMany.mockResolvedValue([failedDelivery]);
+      mockPrismaService.webhookDelivery.findMany.mockResolvedValue([
+        failedDelivery,
+      ]);
 
       await service.retryFailedDeliveries();
 
@@ -313,8 +321,11 @@ describe('WebhookService', () => {
 
   describe('generateSignature', () => {
     it('deve gerar assinatura HMAC', () => {
-      const signature = service['generateSignature']('test-payload', 'test-secret');
-      
+      const signature = service['generateSignature'](
+        'test-payload',
+        'test-secret',
+      );
+
       expect(signature).toBeDefined();
       expect(typeof signature).toBe('string');
       expect(signature.length).toBeGreaterThan(0);
@@ -322,7 +333,7 @@ describe('WebhookService', () => {
 
     it('deve retornar string vazia quando secret não fornecido', () => {
       const signature = service['generateSignature']('test-payload', '');
-      
+
       expect(signature).toBe('');
     });
   });
