@@ -38,6 +38,9 @@ export class ShippingAddressDto {
 
 export class CreateOrderDto {
   @IsString()
+  cartId: string;
+
+  @IsString()
   @IsOptional()
   couponCode?: string;
 

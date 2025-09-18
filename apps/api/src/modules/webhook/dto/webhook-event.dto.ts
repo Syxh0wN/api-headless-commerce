@@ -1,4 +1,10 @@
-import { IsString, IsEnum, IsObject, IsOptional, IsNumber } from 'class-validator';
+import {
+  IsString,
+  IsEnum,
+  IsObject,
+  IsOptional,
+  IsNumber,
+} from 'class-validator';
 
 export enum WebhookEventType {
   ORDER_CREATED = 'ORDER_CREATED',

@@ -31,12 +31,12 @@ import { AdminModule } from './modules/admin/admin.module';
     CacheModule.register({
       isGlobal: true,
     }),
-    BullModule.forRoot({
-      connection: {
-        host: process.env.REDIS_HOST || 'localhost',
-        port: parseInt(process.env.REDIS_PORT || '6379'),
-      },
-    }),
+    // BullModule.forRoot({
+    //   connection: {
+    //     host: process.env.REDIS_HOST || 'localhost',
+    //     port: parseInt(process.env.REDIS_PORT || '6379'),
+    //   },
+    // }),
         AuthModule,
         ProductsModule,
         CartModule,
