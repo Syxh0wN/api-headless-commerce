@@ -78,7 +78,7 @@ describe('ProductsService', () => {
     it('deve criar um produto com tags vazias quando não fornecidas', async () => {
       const dtoWithoutTags = { ...createProductDto };
       delete dtoWithoutTags.tags;
-      
+
       mockPrismaService.product.create.mockResolvedValue(mockProduct);
 
       await service.create(dtoWithoutTags);

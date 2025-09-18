@@ -48,7 +48,10 @@ export class ProductsController {
   @ApiOperation({ summary: 'Atualizar produto' })
   @ApiResponse({ status: 200, description: 'Produto atualizado com sucesso' })
   @ApiResponse({ status: 404, description: 'Produto não encontrado' })
-  async update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateProductDto: UpdateProductDto,
+  ) {
     return this.productsService.update(id, updateProductDto);
   }
 

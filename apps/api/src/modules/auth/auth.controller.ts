@@ -33,7 +33,8 @@ export class AuthController {
       nodeEnv: process.env.NODE_ENV,
       databaseUrl: process.env.DATABASE_URL ? 'SET' : 'NOT_SET',
       jwtSecret: process.env.JWT_SECRET ? 'SET' : 'NOT_SET',
-      useMock: process.env.NODE_ENV === 'development' && !process.env.DATABASE_URL,
+      useMock:
+        process.env.NODE_ENV === 'development' && !process.env.DATABASE_URL,
     };
   }
 

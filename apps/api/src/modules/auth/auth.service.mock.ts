@@ -17,7 +17,7 @@ export class AuthServiceMock {
   async register(registerDto: RegisterDto) {
     const { email, name, password } = registerDto;
 
-    const existingUser = this.users.find(user => user.email === email);
+    const existingUser = this.users.find((user) => user.email === email);
     if (existingUser) {
       throw new ConflictException('Email já está em uso');
     }
@@ -44,7 +44,7 @@ export class AuthServiceMock {
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
 
-    const user = this.users.find(u => u.email === email);
+    const user = this.users.find((u) => u.email === email);
     if (!user) {
       throw new UnauthorizedException('Credenciais inválidas');
     }

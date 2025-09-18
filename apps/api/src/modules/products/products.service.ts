@@ -21,7 +21,14 @@ export class ProductsService {
   }
 
   async findAll(query: ProductQueryDto) {
-    const { page = 1, limit = 10, search, category, sortBy = 'createdAt', sortOrder = 'desc' } = query;
+    const {
+      page = 1,
+      limit = 10,
+      search,
+      category,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+    } = query;
     const skip = (page - 1) * limit;
 
     const where: any = {
