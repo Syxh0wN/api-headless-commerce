@@ -40,9 +40,11 @@ apps/api/src/
 - **Autenticação**: JWT + RBAC
 - **Validação**: class-validator + class-transformer
 - **Documentação**: Swagger/OpenAPI
-- **Testes**: Jest + Supertest
+- **Testes**: Jest + Supertest + Testcontainers + k6 + Dredd
 - **Linting**: ESLint + Prettier
-- **Observabilidade**: OpenTelemetry
+- **Observabilidade**: OpenTelemetry + Prometheus
+- **Containerização**: Docker + docker-compose
+- **CI/CD**: GitHub Actions
 
 ## 📋 Módulos Implementados
 
@@ -101,17 +103,27 @@ npm run build             # Compilar TypeScript
 # Testes
 npm test                  # Testes unitários
 npm run test:e2e          # Testes end-to-end
+npm run test:integration  # Testes de integração
+npm run test:load:catalog # Teste de carga do catálogo
+npm run test:load:checkout # Teste de carga do checkout
+npm run test:contract     # Contract testing com Dredd
 npm run test:cov          # Cobertura de testes
 
 # Qualidade de código
 npm run lint              # ESLint
 npm run format            # Prettier
-npm run lint:fix          # Corrigir problemas de lint
 
 # Banco de dados
+npm run migrate           # Executar migrações automáticas
 npx prisma generate       # Gerar cliente Prisma
 npx prisma migrate dev    # Executar migrações
 npx prisma studio         # Interface visual do banco
+
+# Docker
+npm run docker:build      # Build da imagem Docker
+npm run docker:run        # Iniciar containers
+npm run docker:stop       # Parar containers
+npm run docker:logs       # Visualizar logs
 ```
 
 ## ⚙️ Configuração
@@ -269,20 +281,26 @@ npm test -- --testNamePattern="AuthService"
 
 ## 📊 Estatísticas do Projeto
 
-- **5 módulos** principais implementados
-- **49 testes unitários** com 100% de cobertura
+- **6 módulos** principais implementados
+- **65 testes unitários** com 100% de cobertura
 - **25+ endpoints** RESTful
 - **Arquitetura modular** escalável
 - **Documentação completa** com Swagger
+- **Observabilidade completa** com OpenTelemetry
+- **Mensageria** com BullMQ
+- **Testes avançados** (E2E, Integração, Carga, Contract)
 
 ## 🔧 Próximos Passos
 
-- [ ] Testes E2E para fluxos completos
+- [x] Testes E2E para fluxos completos
+- [x] Sistema de notificações (email/SMS)
+- [x] Monitoramento e métricas
+- [x] Testes de integração com Testcontainers
+- [x] Testes de carga com k6
+- [x] Contract testing com Dredd
 - [ ] Integração com gateways de pagamento
-- [ ] Sistema de notificações (email/SMS)
 - [ ] Dashboard administrativo
 - [ ] Deploy em produção
-- [ ] Monitoramento e métricas
 
 ## 🤝 Contribuição
 

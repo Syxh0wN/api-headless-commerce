@@ -1,0 +1,16 @@
+language: nodejs
+sandbox: false
+server: npm start
+server-wait: 3
+init: false
+custom:
+  apiDocsPath: /api/docs-json
+hooks:
+  before:
+    all:
+      - hooks/before.js
+  after:
+    all:
+      - hooks/after.js
+blueprint: api-docs.yml
+endpoint: http://localhost:3000
