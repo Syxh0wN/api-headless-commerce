@@ -53,14 +53,21 @@ export class CheckoutService {
         userId,
         status: OrderStatus.PENDING,
         subtotal,
-        shippingCost,
+        shippingAmount: shippingCost,
         taxAmount,
         discountAmount,
         total,
-        paymentMethod: createOrderDto.paymentMethod,
-        paymentStatus: PaymentStatus.PENDING,
-        shippingAddress: {
-          create: createOrderDto.shippingAddress,
+        shipping: {
+          create: {
+            firstName: createOrderDto.shippingAddress.street.split(' ')[0] || 'Nome',
+            lastName: createOrderDto.shippingAddress.street.split(' ').slice(1).join(' ') || 'Sobrenome',
+            address1: createOrderDto.shippingAddress.street,
+            address2: createOrderDto.shippingAddress.complement,
+            city: createOrderDto.shippingAddress.city,
+            state: createOrderDto.shippingAddress.state,
+            zipCode: createOrderDto.shippingAddress.zipCode,
+            country: createOrderDto.shippingAddress.country,
+          },
         },
         items: {
           create: cart.items.map((item) => ({
@@ -68,6 +75,7 @@ export class CheckoutService {
             variantId: item.variantId,
             quantity: item.quantity,
             price: item.price,
+            total: item.price * item.quantity,
           })),
         },
         notes: createOrderDto.notes,
@@ -85,7 +93,7 @@ export class CheckoutService {
             },
           },
         },
-        shippingAddress: true,
+        shipping: true,
       },
     });
 
@@ -115,7 +123,7 @@ export class CheckoutService {
             },
           },
         },
-        shippingAddress: true,
+        shipping: true,
       },
     });
 
@@ -153,7 +161,7 @@ export class CheckoutService {
               },
             },
           },
-          shippingAddress: true,
+          shipping: true,
         },
         skip,
         take: limit,
@@ -194,7 +202,7 @@ export class CheckoutService {
             },
           },
         },
-        shippingAddress: true,
+        shipping: true,
       },
     });
 
@@ -206,7 +214,6 @@ export class CheckoutService {
       where: { id: orderId },
       data: {
         status: updateOrderStatusDto.status,
-        paymentStatus: updateOrderStatusDto.paymentStatus,
         notes: updateOrderStatusDto.notes,
       },
       include: {
@@ -222,7 +229,7 @@ export class CheckoutService {
             },
           },
         },
-        shippingAddress: true,
+        shipping: true,
       },
     });
 
@@ -249,8 +256,8 @@ export class CheckoutService {
       where: {
         code: couponCode,
         isActive: true,
-        validFrom: { lte: new Date() },
-        validUntil: { gte: new Date() },
+        startsAt: { lte: new Date() },
+        expiresAt: { gte: new Date() },
       },
     });
 
@@ -278,13 +285,22 @@ export class CheckoutService {
       userId: order.userId,
       status: order.status,
       subtotal: order.subtotal,
-      shippingCost: order.shippingCost,
+      shippingCost: order.shippingAmount,
       taxAmount: order.taxAmount,
       discountAmount: order.discountAmount,
       total: order.total,
-      paymentMethod: order.paymentMethod,
-      paymentStatus: order.paymentStatus,
-      shippingAddress: order.shippingAddress,
+      paymentMethod: order.payment?.method || 'PENDING',
+      paymentStatus: order.payment?.status || 'PENDING',
+      shippingAddress: order.shipping ? {
+        street: order.shipping.address1,
+        number: order.shipping.address2 || '',
+        complement: order.shipping.address2,
+        neighborhood: order.shipping.city,
+        city: order.shipping.city,
+        state: order.shipping.state,
+        zipCode: order.shipping.zipCode,
+        country: order.shipping.country,
+      } : null,
       items: order.items.map((item: any) => ({
         id: item.id,
         productId: item.productId,
