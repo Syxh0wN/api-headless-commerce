@@ -24,13 +24,9 @@ export class PrismaService
     `;
 
     const tables = tablenames
-
       .map(({ tablename }) => tablename)
-
       .filter((name) => name !== '_prisma_migrations')
-
       .map((name) => `"public"."${name}"`)
-
       .join(', ');
 
     try {
