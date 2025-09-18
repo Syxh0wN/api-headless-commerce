@@ -1,105 +1,84 @@
 import {
   Controller,
-  Get,
   Post,
-  Put,
-  Delete,
   Body,
   Param,
-  UseGuards,
+  Headers,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { WebhookService } from './webhook.service';
-import { WebhookEventDto } from './dto/webhook-event.dto';
-import { CreateWebhookDto } from './dto/create-webhook.dto';
-import { WebhookResponseDto } from './dto/webhook-response.dto';
-import { AuthGuard } from '../../common/guards/auth.guard';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiHeader,
+} from '@nestjs/swagger';
+import { WebhookEventService } from './webhook-event.service';
+import { ApiKeyGuard } from '../../common/guards/api-key.guard';
 
-@ApiTags('webhooks')
-@Controller('webhooks')
+@ApiTags('Webhooks v1')
+@Controller('v1/webhooks')
+@UseGuards(ApiKeyGuard)
 export class WebhookController {
-  constructor(private readonly webhookService: WebhookService) {}
+  constructor(private readonly webhookEventService: WebhookEventService) {}
 
-  @Post('events')
+  @Post(':provider')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Processar evento de webhook' })
-  @ApiResponse({ status: 200, description: 'Evento processado com sucesso' })
-  async processEvent(@Body() webhookEventDto: WebhookEventDto): Promise<{ message: string }> {
-    await this.webhookService.processWebhookEvent(webhookEventDto);
-    return { message: 'Evento processado com sucesso' };
+  @ApiOperation({ summary: 'Processar webhook de provider específico' })
+  @ApiResponse({ status: 200, description: 'Webhook processado com sucesso' })
+  @ApiResponse({ status: 400, description: 'Dados inválidos' })
+  @ApiResponse({ status: 409, description: 'Evento duplicado' })
+  @ApiHeader({ name: 'X-Signature', description: 'Assinatura HMAC do webhook' })
+  @ApiHeader({ name: 'X-External-ID', description: 'ID externo do evento' })
+  async processWebhook(
+    @Param('provider') provider: string,
+    @Body() payload: any,
+    @Headers('x-signature') signature: string,
+    @Headers('x-external-id') externalId: string,
+  ) {
+    if (!signature || !externalId) {
+      throw new Error('Headers X-Signature e X-External-ID são obrigatórios');
+    }
+
+    const result = await this.webhookEventService.processWebhookEvent(provider, {
+      externalId,
+      signature,
+      payload,
+      provider,
+    });
+
+    return {
+      success: true,
+      processed: result.processed,
+      eventId: result.eventId,
+      message: 'Webhook processado com sucesso',
+    };
   }
 
-  @Post()
-  @UseGuards(AuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Criar novo webhook' })
-  @ApiResponse({ status: 201, description: 'Webhook criado com sucesso' })
-  async createWebhook(@Body() createWebhookDto: CreateWebhookDto): Promise<WebhookResponseDto> {
-    return this.webhookService.createWebhook(createWebhookDto);
-  }
+  @Post(':provider/test')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Testar webhook (apenas para desenvolvimento)' })
+  @ApiResponse({ status: 200, description: 'Webhook de teste processado' })
+  async testWebhook(
+    @Param('provider') provider: string,
+    @Body() payload: any,
+  ) {
+    const testExternalId = `test_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+    const testSignature = 'test_signature';
 
-  @Get()
-  @UseGuards(AuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Listar webhooks' })
-  @ApiResponse({ status: 200, description: 'Lista de webhooks obtida com sucesso' })
-  async getWebhooks(): Promise<WebhookResponseDto[]> {
-    return this.webhookService.getWebhooks();
-  }
+    const result = await this.webhookEventService.processWebhookEvent(provider, {
+      externalId: testExternalId,
+      signature: testSignature,
+      payload,
+      provider,
+    });
 
-  @Get(':id')
-  @UseGuards(AuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Obter webhook por ID' })
-  @ApiResponse({ status: 200, description: 'Webhook obtido com sucesso' })
-  async getWebhook(@Param('id') id: string): Promise<WebhookResponseDto> {
-    return this.webhookService.getWebhook(id);
-  }
-
-  @Put(':id')
-  @UseGuards(AuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Atualizar webhook' })
-  @ApiResponse({ status: 200, description: 'Webhook atualizado com sucesso' })
-  async updateWebhook(
-    @Param('id') id: string,
-    @Body() updateData: Partial<CreateWebhookDto>,
-  ): Promise<WebhookResponseDto> {
-    return this.webhookService.updateWebhook(id, updateData);
-  }
-
-  @Delete(':id')
-  @UseGuards(AuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Remover webhook' })
-  @ApiResponse({ status: 200, description: 'Webhook removido com sucesso' })
-  async deleteWebhook(@Param('id') id: string): Promise<{ message: string }> {
-    return this.webhookService.deleteWebhook(id);
-  }
-
-  @Post('retry-failed')
-  @UseGuards(AuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Tentar novamente entregas falhadas' })
-  @ApiResponse({ status: 200, description: 'Tentativas de entrega iniciadas' })
-  async retryFailedDeliveries(): Promise<{ message: string }> {
-    await this.webhookService.retryFailedDeliveries();
-    return { message: 'Tentativas de entrega iniciadas' };
-  }
-
-  @Get('stats/deliveries')
-  @UseGuards(AuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Obter estatísticas de entregas' })
-  @ApiResponse({ status: 200, description: 'Estatísticas obtidas com sucesso' })
-  async getDeliveryStats(): Promise<{
-    total: number;
-    delivered: number;
-    failed: number;
-    pending: number;
-  }> {
-    return this.webhookService.getDeliveryStats();
+    return {
+      success: true,
+      processed: result.processed,
+      eventId: result.eventId,
+      message: 'Webhook de teste processado com sucesso',
+    };
   }
 }

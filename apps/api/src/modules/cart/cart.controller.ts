@@ -6,71 +6,102 @@ import {
   Delete,
   Body,
   Param,
-  UseGuards,
-  Request,
+  Req,
+  Res,
 } from '@nestjs/common';
 import {
   ApiTags,
-  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
+  ApiCookieAuth,
 } from '@nestjs/swagger';
-import { CartService } from './cart.service';
+import { Request, Response } from 'express';
+import { GuestCartService } from './guest-cart.service';
 import { AddToCartDto } from './dto/add-to-cart.dto';
 import { UpdateCartItemDto } from './dto/update-cart-item.dto';
-import { CartResponseDto } from './dto/cart-response.dto';
-import { AuthGuard } from '../../common/guards/auth.guard';
+import { ApplyPromoDto } from './dto/apply-promo.dto';
 
-@ApiTags('cart')
-@ApiBearerAuth()
-@Controller('cart')
-@UseGuards(AuthGuard)
+@ApiTags('Cart v1')
+@Controller('v1/carts')
 export class CartController {
-  constructor(private readonly cartService: CartService) {}
+  constructor(private readonly guestCartService: GuestCartService) {}
 
-  @Post('add')
-  @ApiOperation({ summary: 'Adicionar produto ao carrinho' })
-  @ApiResponse({ status: 201, description: 'Produto adicionado ao carrinho' })
-  async addToCart(@Request() req: any, @Body() addToCartDto: AddToCartDto) {
-    return this.cartService.addToCart(req.user.id, addToCartDto);
+  @Post()
+  @ApiOperation({ summary: 'Criar carrinho para guest' })
+  @ApiResponse({ status: 201, description: 'Carrinho criado com sucesso' })
+  async createCart(@Res() res: Response) {
+    const cart = await this.guestCartService.createCart();
+    
+    res.cookie('cart_session', cart.sessionId, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 dias
+    });
+
+    return res.status(201).json({
+      cartId: cart.id,
+      sessionId: cart.sessionId,
+    });
   }
 
-  @Get()
-  @ApiOperation({ summary: 'Obter carrinho do usuário' })
-  @ApiResponse({ status: 200, description: 'Carrinho obtido com sucesso' })
-  async getCart(@Request() req: any): Promise<CartResponseDto> {
-    return this.cartService.getCart(req.user.id);
+  @Post(':id/items')
+  @ApiOperation({ summary: 'Adicionar item ao carrinho' })
+  @ApiResponse({ status: 201, description: 'Item adicionado com sucesso' })
+  async addItem(
+    @Param('id') cartId: string,
+    @Body() addToCartDto: AddToCartDto,
+    @Req() req: Request,
+  ) {
+    const sessionId = req.cookies?.cart_session;
+    return this.guestCartService.addItem(cartId, sessionId, addToCartDto);
   }
 
-  @Patch('items/:itemId')
-  @ApiOperation({ summary: 'Atualizar quantidade de item no carrinho' })
+  @Patch(':id/items/:itemId')
+  @ApiOperation({ summary: 'Atualizar quantidade do item' })
   @ApiResponse({ status: 200, description: 'Item atualizado com sucesso' })
-  async updateCartItem(
-    @Request() req: any,
+  async updateItem(
+    @Param('id') cartId: string,
     @Param('itemId') itemId: string,
     @Body() updateCartItemDto: UpdateCartItemDto,
-  ): Promise<CartResponseDto> {
-    return this.cartService.updateCartItem(
-      req.user.id,
-      itemId,
-      updateCartItemDto,
-    );
+    @Req() req: Request,
+  ) {
+    const sessionId = req.cookies?.cart_session;
+    return this.guestCartService.updateItem(cartId, sessionId, itemId, updateCartItemDto);
   }
 
-  @Delete('items/:itemId')
+  @Delete(':id/items/:itemId')
   @ApiOperation({ summary: 'Remover item do carrinho' })
   @ApiResponse({ status: 200, description: 'Item removido com sucesso' })
-  async removeFromCart(
-    @Request() req: any,
+  async removeItem(
+    @Param('id') cartId: string,
     @Param('itemId') itemId: string,
-  ): Promise<CartResponseDto> {
-    return this.cartService.removeFromCart(req.user.id, itemId);
+    @Req() req: Request,
+  ) {
+    const sessionId = req.cookies?.cart_session;
+    return this.guestCartService.removeItem(cartId, sessionId, itemId);
   }
 
-  @Delete('clear')
-  @ApiOperation({ summary: 'Limpar carrinho' })
-  @ApiResponse({ status: 200, description: 'Carrinho limpo com sucesso' })
-  async clearCart(@Request() req: any) {
-    return this.cartService.clearCart(req.user.id);
+  @Post(':id/apply-promo')
+  @ApiOperation({ summary: 'Aplicar código promocional' })
+  @ApiResponse({ status: 200, description: 'Código aplicado com sucesso' })
+  async applyPromo(
+    @Param('id') cartId: string,
+    @Body() applyPromoDto: ApplyPromoDto,
+    @Req() req: Request,
+  ) {
+    const sessionId = req.cookies?.cart_session;
+    return this.guestCartService.applyPromo(cartId, sessionId, applyPromoDto);
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Obter carrinho com totais recalculados' })
+  @ApiResponse({ status: 200, description: 'Carrinho obtido com sucesso' })
+  async getCart(
+    @Param('id') cartId: string,
+    @Req() req: Request,
+  ) {
+    const sessionId = req.cookies?.cart_session;
+    return this.guestCartService.getCart(cartId, sessionId);
   }
 }

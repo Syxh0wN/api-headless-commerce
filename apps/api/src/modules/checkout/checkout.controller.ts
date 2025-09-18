@@ -1,11 +1,10 @@
 import {
   Controller,
-  Get,
   Post,
-  Patch,
+  Get,
   Body,
   Param,
-  Query,
+  Headers,
   UseGuards,
   UseInterceptors,
   Request,
@@ -15,30 +14,46 @@ import {
   ApiBearerAuth,
   ApiOperation,
   ApiResponse,
+  ApiHeader,
 } from '@nestjs/swagger';
-import { CheckoutService } from './checkout.service';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
-import { OrderResponseDto } from './dto/order-response.dto';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { IdempotencyInterceptor } from '../../common/interceptors/idempotency.interceptor';
+import { AtomicCheckoutService } from './atomic-checkout.service';
+import { CreateOrderDto } from './dto/create-order.dto';
+import { OrderResponseDto } from './dto/order-response.dto';
 
-@ApiTags('checkout')
+@ApiTags('Checkout v1')
 @ApiBearerAuth()
-@Controller('checkout')
+@Controller('v1/checkout')
 @UseGuards(AuthGuard)
 export class CheckoutController {
-  constructor(private readonly checkoutService: CheckoutService) {}
+  constructor(private readonly atomicCheckoutService: AtomicCheckoutService) {}
 
-  @Post('orders')
+  @Post()
   @UseInterceptors(IdempotencyInterceptor)
-  @ApiOperation({ summary: 'Criar novo pedido' })
+  @ApiOperation({ summary: 'Processar checkout com idempotência' })
   @ApiResponse({ status: 201, description: 'Pedido criado com sucesso' })
+  @ApiResponse({ status: 409, description: 'Conflito de estoque' })
+  @ApiHeader({ 
+    name: 'Idempotency-Key', 
+    description: 'Chave de idempotência para evitar duplicação',
+    required: true 
+  })
   async createOrder(
     @Request() req: any,
     @Body() createOrderDto: CreateOrderDto,
+    @Headers('idempotency-key') idempotencyKey: string,
   ): Promise<OrderResponseDto> {
-    return this.checkoutService.createOrder(req.user.id, createOrderDto);
+    if (!idempotencyKey) {
+      throw new Error('Header Idempotency-Key é obrigatório');
+    }
+
+    return this.atomicCheckoutService.processCheckout(
+      req.user.id,
+      createOrderDto.cartId,
+      createOrderDto,
+      idempotencyKey,
+    );
   }
 
   @Get('orders/:id')
@@ -48,30 +63,15 @@ export class CheckoutController {
     @Request() req: any,
     @Param('id') id: string,
   ): Promise<OrderResponseDto> {
-    return this.checkoutService.getOrder(req.user.id, id);
+    // Implementar busca de pedido
+    throw new Error('Implementar busca de pedido');
   }
 
   @Get('orders')
   @ApiOperation({ summary: 'Listar pedidos do usuário' })
-  @ApiResponse({
-    status: 200,
-    description: 'Lista de pedidos obtida com sucesso',
-  })
-  async getUserOrders(
-    @Request() req: any,
-    @Query('page') page?: number,
-    @Query('limit') limit?: number,
-  ) {
-    return this.checkoutService.getUserOrders(req.user.id, page, limit);
-  }
-
-  @Patch('orders/:id/status')
-  @ApiOperation({ summary: 'Atualizar status do pedido' })
-  @ApiResponse({ status: 200, description: 'Status atualizado com sucesso' })
-  async updateOrderStatus(
-    @Param('id') id: string,
-    @Body() updateOrderStatusDto: UpdateOrderStatusDto,
-  ): Promise<OrderResponseDto> {
-    return this.checkoutService.updateOrderStatus(id, updateOrderStatusDto);
+  @ApiResponse({ status: 200, description: 'Lista de pedidos' })
+  async listOrders(@Request() req: any): Promise<OrderResponseDto[]> {
+    // Implementar listagem de pedidos
+    throw new Error('Implementar listagem de pedidos');
   }
 }
