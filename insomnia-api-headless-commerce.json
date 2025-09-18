@@ -111,6 +111,107 @@
       "_type": "request"
     },
     {
+      "_id": "req_get_product_by_slug",
+      "parentId": "fld_products",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/products/{{ _.product_slug }}",
+      "name": "Obter Produto por Slug",
+      "description": "Obter produto específico por slug",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_register",
+      "parentId": "fld_auth",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/auth/register",
+      "name": "Registrar Usuário",
+      "description": "Registrar novo usuário",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"123456\",\n  \"name\": \"João Silva\"\n}"
+      },
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_login",
+      "parentId": "fld_auth",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/auth/login",
+      "name": "Login",
+      "description": "Fazer login e obter token",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"123456\"\n}"
+      },
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_auth_simple_register",
+      "parentId": "fld_auth",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/auth/simple-register",
+      "name": "Registro Simples",
+      "description": "Registro simplificado para testes",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"123456\",\n  \"name\": \"Test User\"\n}"
+      },
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
       "_id": "req_create_cart",
       "parentId": "fld_cart",
       "modified": 1758181500000,
@@ -501,6 +602,282 @@
       "_type": "request"
     },
     {
+      "_id": "req_delete_product",
+      "parentId": "fld_admin",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/v1/admin/products/{{ _.product_id }}",
+      "name": "Remover Produto",
+      "description": "Remover produto (RBAC: ADMIN/STAFF)",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}",
+          "description": "Token de autenticação"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_variant",
+      "parentId": "fld_admin",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/v1/admin/products/{{ _.product_id }}/variants",
+      "name": "Criar Variante",
+      "description": "Criar variante de produto (RBAC: ADMIN/STAFF)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"sku\": \"PRODUCT-VARIANT-001\",\n  \"attributes\": {\n    \"color\": \"Preto\",\n    \"size\": \"M\"\n  },\n  \"priceCents\": 99900,\n  \"inventoryQty\": 50\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}",
+          "description": "Token de autenticação"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_update_stock",
+      "parentId": "fld_admin",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/v1/admin/variants/{{ _.variant_id }}/stock",
+      "name": "Atualizar Estoque",
+      "description": "Atualizar estoque da variante (RBAC: ADMIN/STAFF)",
+      "method": "PATCH",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"quantity\": 100\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}",
+          "description": "Token de autenticação"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_update_promo_code",
+      "parentId": "fld_admin",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/v1/admin/promo-codes/{{ _.promo_id }}",
+      "name": "Atualizar Código Promocional",
+      "description": "Atualizar código promocional (RBAC: ADMIN/STAFF)",
+      "method": "PATCH",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"code\": \"DESCONTO20\",\n  \"type\": \"PERCENTAGE\",\n  \"value\": 20,\n  \"isActive\": true\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}",
+          "description": "Token de autenticação"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_delete_promo_code",
+      "parentId": "fld_admin",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/v1/admin/promo-codes/{{ _.promo_id }}",
+      "name": "Remover Código Promocional",
+      "description": "Remover código promocional (RBAC: ADMIN/STAFF)",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}",
+          "description": "Token de autenticação"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_update_order_status",
+      "parentId": "fld_admin",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/v1/admin/orders/{{ _.order_id }}/status",
+      "name": "Atualizar Status do Pedido",
+      "description": "Atualizar status do pedido (RBAC: ADMIN/STAFF)",
+      "method": "PATCH",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"status\": \"CONFIRMED\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}",
+          "description": "Token de autenticação"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_generate_api_key",
+      "parentId": "fld_admin",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/v1/admin/api-keys",
+      "name": "Gerar API Key",
+      "description": "Gerar nova API Key (RBAC: ADMIN)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"role\": \"CUSTOMER\",\n  \"expiresAt\": \"2025-12-31T23:59:59Z\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}",
+          "description": "Token de autenticação"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_list_api_keys",
+      "parentId": "fld_admin",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/v1/admin/api-keys",
+      "name": "Listar API Keys",
+      "description": "Listar API Keys (RBAC: ADMIN)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}",
+          "description": "Token de autenticação"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_get_audit_logs",
+      "parentId": "fld_admin",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "url": "{{ _.base_url }}/api/v1/admin/audit-logs",
+      "name": "Visualizar Logs de Auditoria",
+      "description": "Visualizar logs de auditoria (RBAC: ADMIN)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.auth_token }}",
+          "description": "Token de autenticação"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1758181500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
       "_id": "req_webhook_test",
       "parentId": "fld_webhooks",
       "modified": 1758181500000,
@@ -550,6 +927,18 @@
       "created": 1758181500000,
       "name": "Health Checks",
       "description": "Endpoints de verificação de saúde da API",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1758181500000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_auth",
+      "parentId": "wrk_headless_commerce",
+      "modified": 1758181500000,
+      "created": 1758181500000,
+      "name": "Auth",
+      "description": "Endpoints de autenticação e autorização",
       "environment": {},
       "environmentPropertyOrder": null,
       "metaSortKey": -1758181500000,
