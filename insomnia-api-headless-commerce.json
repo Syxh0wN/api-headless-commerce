@@ -144,7 +144,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/json",
-        "text": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"123456\",\n  \"name\": \"João Silva\"\n}"
+        "text": "{\n  \"email\": \"joao.silva@email.com\",\n  \"password\": \"senha123\",\n  \"name\": \"João Silva\"\n}"
       },
       "parameters": [],
       "headers": [],
@@ -170,7 +170,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/json",
-        "text": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"123456\"\n}"
+        "text": "{\n  \"email\": \"joao.silva@email.com\",\n  \"password\": \"senha123\"\n}"
       },
       "parameters": [],
       "headers": [],
@@ -196,7 +196,7 @@
       "method": "POST",
       "body": {
         "mimeType": "application/json",
-        "text": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"123456\",\n  \"name\": \"Test User\"\n}"
+        "text": "{\n  \"email\": \"test.user@email.com\",\n  \"password\": \"senha123\",\n  \"name\": \"Test User\"\n}"
       },
       "parameters": [],
       "headers": [],
