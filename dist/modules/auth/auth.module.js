@@ -22,7 +22,8 @@ exports.AuthModule = AuthModule = __decorate([
             jwt_1.JwtModule.registerAsync({
                 imports: [config_1.ConfigModule],
                 useFactory: (configService) => ({
-                    secret: configService.get('JWT_SECRET') || 'default-secret-key-for-development',
+                    secret: configService.get('JWT_SECRET') ||
+                        'default-secret-key-for-development',
                     signOptions: {
                         expiresIn: configService.get('JWT_EXPIRES_IN', '7d'),
                     },
@@ -32,7 +33,7 @@ exports.AuthModule = AuthModule = __decorate([
         ],
         controllers: [auth_controller_1.AuthController],
         providers: [auth_service_1.AuthService, prisma_service_1.PrismaService],
-        exports: [auth_service_1.AuthService],
+        exports: [auth_service_1.AuthService, jwt_1.JwtModule],
     })
 ], AuthModule);
 //# sourceMappingURL=auth.module.js.map

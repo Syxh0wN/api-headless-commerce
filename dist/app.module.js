@@ -11,10 +11,15 @@ const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const throttler_1 = require("@nestjs/throttler");
 const cache_manager_1 = require("@nestjs/cache-manager");
-const bullmq_1 = require("@nestjs/bullmq");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
+const prisma_service_1 = require("./infra/prisma/prisma.service");
 const auth_module_1 = require("./modules/auth/auth.module");
+const products_module_1 = require("./modules/products/products.module");
+const cart_module_1 = require("./modules/cart/cart.module");
+const checkout_module_1 = require("./modules/checkout/checkout.module");
+const webhook_module_1 = require("./modules/webhook/webhook.module");
+const admin_module_1 = require("./modules/admin/admin.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -34,16 +39,15 @@ exports.AppModule = AppModule = __decorate([
             cache_manager_1.CacheModule.register({
                 isGlobal: true,
             }),
-            bullmq_1.BullModule.forRoot({
-                connection: {
-                    host: process.env.REDIS_HOST || 'localhost',
-                    port: parseInt(process.env.REDIS_PORT || '6379'),
-                },
-            }),
             auth_module_1.AuthModule,
+            products_module_1.ProductsModule,
+            cart_module_1.CartModule,
+            checkout_module_1.CheckoutModule,
+            webhook_module_1.WebhookModule,
+            admin_module_1.AdminModule,
         ],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService],
+        providers: [app_service_1.AppService, prisma_service_1.PrismaService],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

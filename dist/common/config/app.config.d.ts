@@ -1,8 +1,8 @@
 import { z } from 'zod';
 declare const configSchema: z.ZodObject<{
     NODE_ENV: z.ZodDefault<z.ZodEnum<{
-        development: "development";
         production: "production";
+        development: "development";
         test: "test";
     }>>;
     PORT: z.ZodDefault<z.ZodCoercedNumber<unknown>>;
@@ -19,7 +19,7 @@ declare const configSchema: z.ZodObject<{
 }, z.core.$strip>;
 export type AppConfig = z.infer<typeof configSchema>;
 export declare const validateConfig: (config: Record<string, unknown>) => {
-    NODE_ENV: "development" | "production" | "test";
+    NODE_ENV: "production" | "development" | "test";
     PORT: number;
     DATABASE_URL: string;
     REDIS_HOST: string;

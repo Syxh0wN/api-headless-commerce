@@ -23,6 +23,9 @@ let AppController = class AppController {
     getHealth() {
         return this.appService.getHealth();
     }
+    getReadiness() {
+        return this.appService.getReadiness();
+    }
 };
 exports.AppController = AppController;
 __decorate([
@@ -41,6 +44,14 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "getHealth", null);
+__decorate([
+    (0, common_1.Get)('ready'),
+    (0, swagger_1.ApiOperation)({ summary: 'Readiness check da API' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Status de prontidão da aplicação' }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "getReadiness", null);
 exports.AppController = AppController = __decorate([
     (0, swagger_1.ApiTags)('Health'),
     (0, common_1.Controller)(),

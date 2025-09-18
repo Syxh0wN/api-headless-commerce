@@ -11,54 +11,131 @@ const common_1 = require("@nestjs/common");
 const redis_1 = require("redis");
 let RedisService = class RedisService {
     async onModuleInit() {
-        this.client = (0, redis_1.createClient)({
-            socket: {
-                host: process.env.REDIS_HOST || 'localhost',
-                port: parseInt(process.env.REDIS_PORT || '6379'),
-            },
-            password: process.env.REDIS_PASSWORD,
-        });
-        this.client.on('error', (err) => {
-            console.error('Redis Client Error', err);
-        });
-        await this.client.connect();
+        try {
+            this.client = (0, redis_1.createClient)({
+                socket: {
+                    host: process.env.REDIS_HOST || 'localhost',
+                    port: parseInt(process.env.REDIS_PORT || '6379'),
+                },
+                password: process.env.REDIS_PASSWORD,
+            });
+            this.client.on('error', (err) => {
+                console.error('Redis Client Error', err);
+            });
+            await this.client.connect();
+            console.log('Redis conectado com sucesso');
+        }
+        catch (error) {
+            console.warn('Redis não disponível, continuando sem cache:', error.message);
+            this.client = null;
+        }
     }
     async onModuleDestroy() {
-        await this.client.disconnect();
+        if (this.client) {
+            await this.client.disconnect();
+        }
     }
     getClient() {
         return this.client;
     }
     async set(key, value, ttl) {
-        if (ttl) {
-            await this.client.setEx(key, ttl, value);
+        if (!this.client)
+            return;
+        try {
+            if (ttl) {
+                await this.client.setEx(key, ttl, value);
+            }
+            else {
+                await this.client.set(key, value);
+            }
         }
-        else {
-            await this.client.set(key, value);
+        catch (error) {
+            console.warn('Redis set error:', error.message);
         }
     }
     async get(key) {
-        const result = await this.client.get(key);
-        return result;
+        if (!this.client)
+            return null;
+        try {
+            const result = await this.client.get(key);
+            return result;
+        }
+        catch (error) {
+            console.warn('Redis get error:', error.message);
+            return null;
+        }
     }
     async del(key) {
-        await this.client.del(key);
+        if (!this.client)
+            return;
+        try {
+            await this.client.del(key);
+        }
+        catch (error) {
+            console.warn('Redis del error:', error.message);
+        }
     }
     async exists(key) {
-        const result = await this.client.exists(key);
-        return result === 1;
+        if (!this.client)
+            return false;
+        try {
+            const result = await this.client.exists(key);
+            return result === 1;
+        }
+        catch (error) {
+            console.warn('Redis exists error:', error.message);
+            return false;
+        }
     }
     async lock(key, ttl = 30) {
-        const lockKey = `lock:${key}`;
-        const result = await this.client.set(lockKey, '1', {
-            EX: ttl,
-            NX: true,
-        });
-        return result === 'OK';
+        if (!this.client)
+            return false;
+        try {
+            const lockKey = `lock:${key}`;
+            const result = await this.client.set(lockKey, '1', {
+                EX: ttl,
+                NX: true,
+            });
+            return result === 'OK';
+        }
+        catch (error) {
+            console.warn('Redis lock error:', error.message);
+            return false;
+        }
     }
     async unlock(key) {
-        const lockKey = `lock:${key}`;
-        await this.client.del(lockKey);
+        if (!this.client)
+            return;
+        try {
+            const lockKey = `lock:${key}`;
+            await this.client.del(lockKey);
+        }
+        catch (error) {
+            console.warn('Redis unlock error:', error.message);
+        }
+    }
+    async ping() {
+        if (!this.client)
+            return 'Redis não disponível';
+        try {
+            return await this.client.ping();
+        }
+        catch (error) {
+            console.warn('Redis ping error:', error.message);
+            return 'Redis não disponível';
+        }
+    }
+    async connect() {
+        if (!this.client)
+            return;
+        try {
+            if (!this.client.isOpen) {
+                await this.client.connect();
+            }
+        }
+        catch (error) {
+            console.warn('Redis connect error:', error.message);
+        }
     }
 };
 exports.RedisService = RedisService;

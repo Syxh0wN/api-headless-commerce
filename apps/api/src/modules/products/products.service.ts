@@ -32,9 +32,9 @@ export class ProductsService {
     } = query;
     const skip = (page - 1) * limit;
 
-        const where: any = {
-          status: 'ACTIVE',
-        };
+    const where: any = {
+      status: 'ACTIVE',
+    };
 
     if (search) {
       where.OR = [
@@ -44,7 +44,11 @@ export class ProductsService {
     }
 
     if (category) {
-      where.categoryId = category;
+      where.productCategories = {
+        some: {
+          categoryId: category,
+        },
+      };
     }
 
     const [products, total] = await Promise.all([
@@ -53,6 +57,14 @@ export class ProductsService {
         skip,
         take: limit,
         orderBy: { [sortBy]: sortOrder },
+        include: {
+          variants: true,
+          productCategories: {
+            include: {
+              category: true,
+            },
+          },
+        },
       }),
       this.prisma.product.count({ where }),
     ]);
